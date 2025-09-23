@@ -1,6 +1,6 @@
 <?php
 
-namespace Tapp\FilamentMailLog\Models;
+namespace Bauerdot\FilamentMailLog\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

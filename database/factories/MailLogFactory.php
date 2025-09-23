@@ -1,9 +1,9 @@
 <?php
 
-namespace Tapp\FilamentMailLog\Database\Factories;
+namespace Bauerdot\FilamentMailLog\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Tapp\FilamentMailLog\Models\MailLog;
+use Bauerdot\FilamentMailLog\Models\MailLog;
 
 class MailLogFactory extends Factory
 {

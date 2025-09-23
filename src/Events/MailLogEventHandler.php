@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tapp\FilamentMailLog\Events;
+namespace Bauerdot\FilamentMailLog\Events;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Str;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Part\DataPart;
-use Tapp\FilamentMailLog\Models\MailLog;
+use Bauerdot\FilamentMailLog\Models\MailLog;
 
 class MailLogEventHandler
 {
@@ -22,7 +22,7 @@ class MailLogEventHandler
     {
         $events->listen(
             MessageSending::class,
-            'Tapp\FilamentMailLog\Events\MailLogEventHandler@handleMessageSending',
+            MailLogEventHandler::class.'@handleMessageSending',
         );
     }
 

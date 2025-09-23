@@ -1,9 +1,9 @@
 <?php
 
-namespace Tapp\FilamentMailLog\Resources\MailLogResource\Pages;
+namespace Bauerdot\FilamentMailLog\Resources\MailLogResource\Pages;
 
 use Filament\Resources\Pages\ListRecords;
-use Tapp\FilamentMailLog\Resources\MailLogResource;
+use Bauerdot\FilamentMailLog\Resources\MailLogResource;
 
 class ListMailLogs extends ListRecords
 {

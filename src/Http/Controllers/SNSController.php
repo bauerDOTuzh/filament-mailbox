@@ -1,6 +1,6 @@
 <?php
 
-namespace Tapp\FilamentMailLog\Http\Controllers;
+namespace Bauerdot\FilamentMailLog\Http\Controllers;
 
 use App\Models\User;
 use Aws\Sns\Exception\InvalidSnsMessageException;
@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Tapp\FilamentMailLog\Models\MailLog;
+use Bauerdot\FilamentMailLog\Models\MailLog;
 
 class SNSController extends Controller
 {

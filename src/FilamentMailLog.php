@@ -1,5 +1,5 @@
 <?php
 
-namespace Tapp\FilamentMailLog;
+namespace Bauerdot\FilamentMailLog;
 
 class FilamentMailLog {}

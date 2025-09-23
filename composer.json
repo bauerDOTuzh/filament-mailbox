@@ -1,5 +1,5 @@
 {
-    "name": "tapp/filament-maillog",
+    "name": "bauerdot/filament-maillog",
     "description": "Filament plugin to view outgoing mail",
     "keywords": [
         "Tapp Network",
@@ -22,6 +22,7 @@
     "require": {
         "php": "^8.2",
         "aws/aws-php-sns-message-validator": "^1.10",
+        "filament/filament": "^4.0",
         "illuminate/contracts": "^10.0||^11.0||^12.0",
         "spatie/laravel-package-tools": "^1.16"
     },
@@ -40,28 +41,24 @@
     },
     "autoload": {
         "psr-4": {
-            "Tapp\\FilamentMailLog\\": "src/",
-            "Tapp\\FilamentMailLog\\Database\\Factories\\": "database/factories/"
+            "Bauerdot\\FilamentMailLog\\": "src/",
+            "Bauerdot\\FilamentMailLog\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tapp\\FilamentMailLog\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "Bauerdot\\FilamentMailLog\\Tests\\": "tests/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
-        "clear": "@php vendor/bin/testbench package:purge-filament-maillog --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": [
-            "@composer run prepare",
-            "@php vendor/bin/testbench workbench:build --ansi"
+            "@composer run prepare"
         ],
         "start": [
             "Composer\\Config::disableProcessTimeout",
-            "@composer run build",
-            "@php vendor/bin/testbench serve"
+            "@composer run build"
         ],
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
@@ -78,10 +75,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Tapp\\FilamentMailLog\\FilamentMailLogServiceProvider"
+                "Bauerdot\\FilamentMailLog\\FilamentMailLogServiceProvider"
             ],
             "aliases": {
-                "FilamentMailLog": "Tapp\\FilamentMailLog\\Facades\\FilamentMailLog"
+                "FilamentMailLog": "Bauerdot\\FilamentMailLog\\Facades\\FilamentMailLog"
             }
         }
     },

@@ -25,4 +25,7 @@ return [
     'column.data' => 'Data',
     'column.created_at' => 'Created At',
     'column.updated_at' => 'Updated At',
+    // Settings navigation
+    'navigation.settings.label' => 'Mail Settings',
+    'navigation.settings.plural-label' => 'Mail Settings',
 ];

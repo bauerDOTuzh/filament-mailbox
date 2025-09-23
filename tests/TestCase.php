@@ -1,10 +1,10 @@
 <?php
 
-namespace Tapp\FilamentMailLog\Tests;
+namespace Bauerdot\FilamentMailLog\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Tapp\FilamentMailLog\FilamentMailLogServiceProvider;
+use Bauerdot\FilamentMailLog\FilamentMailLogServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -13,7 +13,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Tapp\\FilamentMailLog\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'Bauerdot\\FilamentMailLog\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 

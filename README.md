@@ -52,7 +52,7 @@ return [
     ],
 
     'resources' => [
-        'MaiLogResource' => \Tapp\FilamentMailLog\Resources\MailLogResource::class,
+        'MaiLogResource' => \Bauerdot\FilamentMailLog\Resources\MailLogResource::class,
     ],
 
     'navigation' => [
@@ -82,7 +82,7 @@ Add this plugin to a panel on `plugins()` method.
 E.g. in `app/Providers/Filament/AdminPanelProvider.php`:
 
 ```php
-use Tapp\FilamentMailLog\FilamentMailLogPlugin;
+use Bauerdot\FilamentMailLog\FilamentMailLogPlugin;
  
 public function panel(Panel $panel): Panel
 {

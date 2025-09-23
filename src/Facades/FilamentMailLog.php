@@ -1,16 +1,16 @@
 <?php
 
-namespace Tapp\FilamentMailLog\Facades;
+namespace Bauerdot\FilamentMailLog\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Tapp\FilamentMailLog\FilamentMailLog
+ * @see \Bauerdot\FilamentMailLog\FilamentMailLog
  */
 class FilamentMailLog extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Tapp\FilamentMailLog\FilamentMailLog::class;
+    return \Bauerdot\FilamentMailLog\FilamentMailLog::class;
     }
 }

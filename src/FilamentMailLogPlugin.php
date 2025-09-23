@@ -1,6 +1,6 @@
 <?php
 
-namespace Tapp\FilamentMailLog;
+namespace Bauerdot\FilamentMailLog;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
@@ -21,7 +21,12 @@ class FilamentMailLogPlugin implements Plugin
     {
         $panel
             ->resources(
-                config('filament-maillog.resources')
+                [
+                    \Bauerdot\FilamentMailLog\Resources\MailSettingResource::class,
+                    \Bauerdot\FilamentMailLog\Resources\MailLogResource::class,
+                    // \Bauerdot\FilamentMailLog\Resources\MailLogResource::class,
+                ]
+                // config('filament-maillog.resources')
             );
     }
 

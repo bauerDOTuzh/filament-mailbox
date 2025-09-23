@@ -1,10 +1,12 @@
 <?php
 
-namespace Tapp\FilamentMailLog;
+namespace Bauerdot\FilamentMailLog;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Tapp\FilamentMailLog\Events\MailLogEventHandler;
+use Bauerdot\FilamentMailLog\Events\MailLogEventHandler;
+use Bauerdot\FilamentMailLog\Listeners\MessageSendingListener;
+use Illuminate\Mail\Events\MessageSending;
 
 class FilamentMailLogServiceProvider extends PackageServiceProvider
 {
@@ -15,11 +17,15 @@ class FilamentMailLogServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasTranslations()
-            ->hasMigration('create_filament_mail_log_table');
+            ->hasMigration('create_filament_mail_log_table')
+            ->hasMigration('create_mail_setting_table');
     }
 
     public function packageBooted(): void
     {
         $this->app['events']->subscribe(MailLogEventHandler::class);
+
+        // Register mail message sending listener
+        $this->app['events']->listen(MessageSending::class, MessageSendingListener::class);
     }
 }

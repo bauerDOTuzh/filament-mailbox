@@ -1,6 +1,6 @@
 <?php
 
-namespace Tapp\FilamentMailLog\Resources;
+namespace Bauerdot\FilamentMailLog\Resources;
 
 use Filament\Forms;
 use Filament\Infolists;
@@ -10,9 +10,11 @@ use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
-use Tapp\FilamentMailLog\Models\MailLog;
-use Tapp\FilamentMailLog\Resources\MailLogResource\Pages;
+use Bauerdot\FilamentMailLog\Models\MailLog;
+use Bauerdot\FilamentMailLog\Resources\MailLogResource\Pages;
+use Filament\Actions\ViewAction;
 
 class MailLogResource extends Resource
 {
@@ -48,7 +50,7 @@ class MailLogResource extends Resource
         return __('filament-maillog::filament-maillog.navigation.maillog.plural-label');
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $infolist): Schema
     {
         return $infolist
             ->schema([
@@ -88,14 +90,14 @@ class MailLogResource extends Resource
                 Infolists\Components\TextEntry::make('attachments')
                     ->label(trans('filament-maillog::filament-maillog.column.attachments'))
                     ->columnSpanFull(),
-                Infolists\Components\Section::make('Data')
-                    ->label(trans('filament-maillog::filament-maillog.column.data'))
-                    ->icon('heroicon-m-list-bullet')
-                    ->schema([
-                        Infolists\Components\TextEntry::make('data_json')
-                            ->label(null),
-                    ])
-                    ->columnSpanFull(),
+                // Infolists\Components\Section::make('Data')
+                //     ->label(trans('filament-maillog::filament-maillog.column.data'))
+                //     ->icon('heroicon-m-list-bullet')
+                //     ->schema([
+                //         Infolists\Components\TextEntry::make('data_json')
+                //             ->label(null),
+                //     ])
+                //     ->columnSpanFull(),
             ]);
     }
 
@@ -160,8 +162,8 @@ class MailLogResource extends Resource
                             );
                     }),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
             ]);
     }
 
