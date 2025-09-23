@@ -28,4 +28,14 @@ return [
     // Settings navigation
     'navigation.settings.label' => 'Mail Settings',
     'navigation.settings.plural-label' => 'Mail Settings',
+    'navigation.settings.show_environment_banner' => 'Show environment banner',
+    'navigation.settings.sandbox_mode' => 'Sandbox mode',
+    'navigation.settings.sandbox_address' => 'Sandbox address',
+    'navigation.settings.bcc_address' => 'BCC addresses',
+    'navigation.settings.allowed_emails' => 'Allowed emails',
+    // Actions / modals
+    'actions.send_test_email' => 'Send test email',
+    'actions.send_test_email_heading' => 'Send test email',
+    'actions.send' => 'Send',
+    'actions.recipient' => 'Recipient email',
 ];

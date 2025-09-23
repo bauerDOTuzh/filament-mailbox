@@ -4,6 +4,8 @@ namespace Bauerdot\FilamentMailLog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 class MailSetting extends Model
 {
@@ -20,6 +22,12 @@ class MailSetting extends Model
     protected $casts = [
         'value' => 'string', // Will be cast based on type in accessor
     ];
+
+    // Cache key prefix for settings
+    protected static string $cachePrefix = 'filament-maillog.mail_settings.';
+
+    // Cache ttl in seconds (null = forever)
+    protected static $cacheTtl = null;
 
     /**
      * Get the cast value based on type
@@ -64,8 +72,33 @@ class MailSetting extends Model
      */
     public static function getValue(string $key, $default = null)
     {
+        // First check cache
+        $cacheKey = static::$cachePrefix . $key;
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
+        // Next, check DB
         $setting = static::where('key', $key)->first();
-        return $setting ? $setting->value : $default;
+        if ($setting) {
+            $value = $setting->value;
+            $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
+            Cache::put($cacheKey, $value, $ttl);
+            return $value;
+        }
+
+        // Fall back to config defaults
+        $defaults = Config::get('filament-maillog.mail_settings.defaults', []);
+        if (array_key_exists($key, $defaults)) {
+            $value = $defaults[$key];
+            // Cache the default as well for consistent reads
+            $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
+            Cache::put($cacheKey, $value, $ttl);
+            return $value;
+        }
+
+        return $default;
     }
 
     /**
@@ -73,9 +106,71 @@ class MailSetting extends Model
      */
     public static function setValue(string $key, $value): void
     {
+        // Respect lock settings
+        $lock = Config::get('filament-maillog.mail_settings.lock_values', false);
+        $defaults = Config::get('filament-maillog.mail_settings.defaults', []);
+
+        if ($lock && array_key_exists($key, $defaults)) {
+            // If locked, don't overwrite default keys
+            return;
+        }
+
         static::updateOrCreate(
             ['key' => $key],
             ['value' => $value]
         );
+
+        // Update cache
+        $cacheKey = static::$cachePrefix . $key;
+        $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
+        Cache::put($cacheKey, $value, $ttl);
+
+        // Also flush DTO cache so the DTO reflects latest values
+        if (class_exists(MailSettingsDto::class)) {
+            MailSettingsDto::flushCache();
+        }
+    }
+
+    /**
+     * Get all settings merged with defaults, using cache when possible
+     *
+     * @return array<string,mixed>
+     */
+    public static function allCached(): array
+    {
+        $defaults = Config::get('filament-maillog.mail_settings.defaults', []);
+
+        $rows = static::all()->pluck('value', 'key')->all();
+
+        // Merge DB values over defaults
+        $merged = array_merge($defaults, $rows);
+
+        // Cache each value
+        $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
+        foreach ($merged as $k => $v) {
+            Cache::put(static::$cachePrefix . $k, $v, $ttl);
+        }
+
+        return $merged;
+    }
+
+    /**
+     * Flush cached mail settings
+     */
+    public static function flushCache(): void
+    {
+        $keys = array_keys(Config::get('filament-maillog.mail_settings.defaults', []));
+        foreach ($keys as $k) {
+            Cache::forget(static::$cachePrefix . $k);
+        }
+
+        // Also forget any DB-driven keys
+        $rows = static::pluck('key')->all();
+        foreach ($rows as $k) {
+            Cache::forget(static::$cachePrefix . $k);
+        }
+        if (class_exists(MailSettingsDto::class)) {
+            MailSettingsDto::flushCache();
+        }
     }
 }

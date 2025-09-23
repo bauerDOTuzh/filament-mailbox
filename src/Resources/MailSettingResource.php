@@ -11,6 +11,7 @@ use Filament\Support\Icons\Heroicon;
 use BackedEnum;
 use Bauerdot\FilamentMailLog\Models\MailSetting;
 use Bauerdot\FilamentMailLog\Resources\MailSettingResource\Pages\ListMailSettings;
+use Bauerdot\FilamentMailLog\Resources\MailSettingResource\Pages\EditMailSettings;
 
 class MailSettingResource extends Resource
 {
@@ -45,7 +46,8 @@ class MailSettingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListMailSettings::route('/'),
+            'index' => EditMailSettings::route('/'),
+            // 'list' => ListMailSettings::route('/list'),
             // 'edit' => Pages\EditMailSettings::route('/'),
         ];
     }

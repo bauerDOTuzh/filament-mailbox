@@ -25,4 +25,9 @@ return [
     'column.data' => 'Dati',
     'column.created_at' => 'Creato il',
     'column.updated_at' => 'Modificato il',
+    // Actions / modals
+    'actions.send_test_email' => 'Invia email di prova',
+    'actions.send_test_email_heading' => 'Invia email di prova',
+    'actions.send' => 'Invia',
+    'actions.recipient' => 'Email destinatario',
 ];

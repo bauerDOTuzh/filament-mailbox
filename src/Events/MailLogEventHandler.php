@@ -11,6 +11,10 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Part\DataPart;
 use Bauerdot\FilamentMailLog\Models\MailLog;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Mime\Address;
+
 class MailLogEventHandler
 {
     public function __construct()
@@ -34,12 +38,13 @@ class MailLogEventHandler
         $message = $event->message;
 
         $mailLog = MailLog::create([
-            'from' => $this->formatAddressField($message, 'From'),
-            'to' => $this->formatAddressField($message, 'To'),
-            'cc' => $this->formatAddressField($message, 'Cc'),
-            'bcc' => $this->formatAddressField($message, 'Bcc'),
+            'from' => $this->getAddressesValue($message->getFrom()),
+            'to' => $this->getAddressesValue($message->getTo()),
+            'cc' => $this->getAddressesValue($message->getCc()),
+            'bcc' => $this->getAddressesValue($message->getBcc()),
             'subject' => $message->getSubject(),
-            'body' => $message->getHtmlBody(),
+            'body' => $message->getHtmlBody() ?? '',
+            'text_body' => $message->getTextBody() ?? '',
             'headers' => $message->getHeaders()->toString(),
             'attachments' => $this->saveAttachments($message),
             'message_id' => (string) Str::uuid(),
@@ -55,11 +60,12 @@ class MailLogEventHandler
     /**
      * Format address strings for sender, to, cc, bcc.
      */
-    public function formatAddressField(Email $message, string $field): ?string
+    protected function getAddressesValue(array $address): ?Collection
     {
-        $headers = $message->getHeaders();
+        $addresses = collect($address)
+            ->flatMap(fn (Address $address) => [$address->getAddress() => $address->getName() === '' ? null : $address->getName()]);
 
-        return $headers->get($field)?->getBodyAsString();
+        return $addresses->count() > 0 ? $addresses : null;
     }
 
     /**
