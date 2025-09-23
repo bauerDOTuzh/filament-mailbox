@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('bcc')->nullable();
             $table->string('subject');
             $table->text('body');
-            $table->text('text');
+            $table->text('text_body');
             $table->text('headers')->nullable();
             $table->longText('attachments')->nullable();
             $table->uuid('message_id')->nullable();

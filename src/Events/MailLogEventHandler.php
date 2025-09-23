@@ -12,8 +12,10 @@ use Symfony\Component\Mime\Part\DataPart;
 use Bauerdot\FilamentMailLog\Models\MailLog;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Mime\Address;
+use Throwable;
 
 class MailLogEventHandler
 {
@@ -35,26 +37,33 @@ class MailLogEventHandler
      */
     public function handleMessageSending(MessageSending $event): void
     {
-        $message = $event->message;
+        try {
+            $message = $event->message;
 
-        $mailLog = MailLog::create([
-            'from' => $this->getAddressesValue($message->getFrom()),
-            'to' => $this->getAddressesValue($message->getTo()),
-            'cc' => $this->getAddressesValue($message->getCc()),
-            'bcc' => $this->getAddressesValue($message->getBcc()),
-            'subject' => $message->getSubject(),
-            'body' => $message->getHtmlBody() ?? '',
-            'text_body' => $message->getTextBody() ?? '',
-            'headers' => $message->getHeaders()->toString(),
-            'attachments' => $this->saveAttachments($message),
-            'message_id' => (string) Str::uuid(),
-        ]);
+            $mailLog = MailLog::create([
+                'from' => $this->getAddressesValue($message->getFrom()),
+                'to' => $this->getAddressesValue($message->getTo()),
+                'cc' => $this->getAddressesValue($message->getCc()),
+                'bcc' => $this->getAddressesValue($message->getBcc()),
+                'subject' => $message->getSubject(),
+                'body' => $message->getHtmlBody() ?? '',
+                'text_body' => $message->getTextBody() ?? '',
+                'headers' => $message->getHeaders()->toString(),
+                'attachments' => $this->saveAttachments($message),
+                'message_id' => (string) Str::uuid(),
+            ]);
 
-        if (config('filament-maillog.amazon-ses.configuration-set') !== null) {
-            $event->message->getHeaders()->addTextHeader('X-SES-CONFIGURATION-SET', config('filament-maillog.amazon-ses.configuration-set'));
+            if (config('filament-maillog.amazon-ses.configuration-set') !== null) {
+                $event->message->getHeaders()->addTextHeader('X-SES-CONFIGURATION-SET', config('filament-maillog.amazon-ses.configuration-set'));
+            }
+
+            $event->message->getHeaders()->addTextHeader('unique-id', $mailLog->message_id);
+        } catch (Throwable $e) {
+            // Log a warning and swallow the exception so mail sending continues.
+            Log::warning('MailLogEventHandler failed while handling MessageSending: '.$e->getMessage(), [
+                'exception' => $e,
+            ]);
         }
-
-        $event->message->getHeaders()->addTextHeader('unique-id', $mailLog->message_id);
     }
 
     /**
