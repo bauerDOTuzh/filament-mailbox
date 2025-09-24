@@ -4,7 +4,6 @@ namespace Bauerdot\FilamentMailLog\Models;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use Bauerdot\FilamentMailLog\Models\MailSetting;
 
 /**
  * Simple DTO for typed mail settings access.
@@ -12,9 +11,13 @@ use Bauerdot\FilamentMailLog\Models\MailSetting;
 final class MailSettingsDto
 {
     public bool $show_environment_banner;
+
     public bool $sandbox_mode;
+
     public ?string $sandbox_address;
+
     public array $bcc_address;
+
     public array $allowed_emails;
 
     public function __construct(array $data)
@@ -37,7 +40,7 @@ final class MailSettingsDto
         }
 
         // Filter out empty values and validate emails
-        $list = array_values(array_filter(array_map(fn($v) => trim((string) $v), $list), fn($v) => $v !== ''));
+        $list = array_values(array_filter(array_map(fn ($v) => trim((string) $v), $list), fn ($v) => $v !== ''));
 
         $valid = [];
         foreach ($list as $email) {
@@ -56,7 +59,7 @@ final class MailSettingsDto
 
     public static function fromConfigAndModel(bool $useCache = true): self
     {
-        $cacheKey = static::cacheKey();
+        $cacheKey = self::cacheKey();
         $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', null);
 
         if ($useCache && Cache::has($cacheKey)) {
@@ -79,6 +82,6 @@ final class MailSettingsDto
 
     public static function flushCache(): void
     {
-        Cache::forget(static::cacheKey());
+        Cache::forget(self::cacheKey());
     }
 }

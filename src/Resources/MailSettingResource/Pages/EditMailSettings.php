@@ -2,18 +2,18 @@
 
 namespace Bauerdot\FilamentMailLog\Resources\MailSettingResource\Pages;
 
-use Filament\Actions\Action;
-use Filament\Forms\Components;
-use Filament\Resources\Pages\Page;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Notifications\Notification;
-use Filament\Forms\Concerns\InteractsWithForms;
 use Bauerdot\FilamentMailLog\Models\MailSetting;
 use Bauerdot\FilamentMailLog\Models\MailSettingsDto;
 use Bauerdot\FilamentMailLog\Resources\MailSettingResource;
+use Filament\Actions\Action;
+use Filament\Forms\Components;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\Page;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class EditMailSettings extends Page implements HasForms
 {
@@ -122,6 +122,7 @@ class EditMailSettings extends Page implements HasForms
                             ->danger()
                             ->title('No recipient available to send test email')
                             ->send();
+
                         return;
                     }
 
@@ -137,7 +138,7 @@ class EditMailSettings extends Page implements HasForms
                 }),
         ];
     }
-    
+
     // 6. This method is called by the 'save' action's submit()
     public function save(): void
     {

@@ -45,6 +45,7 @@ return [
                 if (is_array($v)) {
                     return $v;
                 }
+
                 return array_values(array_filter(array_map('trim', explode(',', (string) $v))));
             })(),
             'allowed_emails' => (function () {
@@ -55,6 +56,7 @@ return [
                 if (is_array($v)) {
                     return $v;
                 }
+
                 return array_values(array_filter(array_map('trim', explode(',', (string) $v))));
             })(),
         ],
@@ -66,6 +68,5 @@ return [
         // Cache TTL for mail settings (seconds). Null = forever.
         'cache_ttl' => null,
     ],
-
 
 ];

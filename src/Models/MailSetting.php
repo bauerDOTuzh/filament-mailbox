@@ -2,8 +2,8 @@
 
 namespace Bauerdot\FilamentMailLog\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
@@ -73,7 +73,7 @@ class MailSetting extends Model
     public static function getValue(string $key, $default = null)
     {
         // First check cache
-        $cacheKey = static::$cachePrefix . $key;
+        $cacheKey = static::$cachePrefix.$key;
 
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
@@ -85,6 +85,7 @@ class MailSetting extends Model
             $value = $setting->value;
             $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
             Cache::put($cacheKey, $value, $ttl);
+
             return $value;
         }
 
@@ -95,6 +96,7 @@ class MailSetting extends Model
             // Cache the default as well for consistent reads
             $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
             Cache::put($cacheKey, $value, $ttl);
+
             return $value;
         }
 
@@ -121,7 +123,7 @@ class MailSetting extends Model
         );
 
         // Update cache
-        $cacheKey = static::$cachePrefix . $key;
+        $cacheKey = static::$cachePrefix.$key;
         $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
         Cache::put($cacheKey, $value, $ttl);
 
@@ -148,7 +150,7 @@ class MailSetting extends Model
         // Cache each value
         $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
         foreach ($merged as $k => $v) {
-            Cache::put(static::$cachePrefix . $k, $v, $ttl);
+            Cache::put(static::$cachePrefix.$k, $v, $ttl);
         }
 
         return $merged;
@@ -161,13 +163,13 @@ class MailSetting extends Model
     {
         $keys = array_keys(Config::get('filament-maillog.mail_settings.defaults', []));
         foreach ($keys as $k) {
-            Cache::forget(static::$cachePrefix . $k);
+            Cache::forget(static::$cachePrefix.$k);
         }
 
         // Also forget any DB-driven keys
         $rows = static::pluck('key')->all();
         foreach ($rows as $k) {
-            Cache::forget(static::$cachePrefix . $k);
+            Cache::forget(static::$cachePrefix.$k);
         }
         if (class_exists(MailSettingsDto::class)) {
             MailSettingsDto::flushCache();
