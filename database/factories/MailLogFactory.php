@@ -2,8 +2,8 @@
 
 namespace Bauerdot\FilamentMailLog\Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Bauerdot\FilamentMailLog\Models\MailLog;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MailLogFactory extends Factory
 {

@@ -2,8 +2,8 @@
 
 namespace Bauerdot\FilamentMailLog\Resources\MailLogResource\Pages;
 
-use Filament\Resources\Pages\ViewRecord;
 use Bauerdot\FilamentMailLog\Resources\MailLogResource;
+use Filament\Resources\Pages\ViewRecord;
 
 class ViewMailLog extends ViewRecord
 {

@@ -6,11 +6,11 @@ use App\Models\User;
 use Aws\Sns\Exception\InvalidSnsMessageException;
 use Aws\Sns\Message;
 use Aws\Sns\MessageValidator;
+use Bauerdot\FilamentMailLog\Models\MailLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Bauerdot\FilamentMailLog\Models\MailLog;
 
 class SNSController extends Controller
 {

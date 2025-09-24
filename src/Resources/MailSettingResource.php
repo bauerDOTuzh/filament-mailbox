@@ -2,16 +2,14 @@
 
 namespace Bauerdot\FilamentMailLog\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
 // use Bauerdot\FilamentMailLog\Resources\Pages\EditMailSettings;
-use Filament\Resources\Resource;
-use Filament\Resources\Pages\Page;
-use Filament\Support\Icons\Heroicon;
 use BackedEnum;
 use Bauerdot\FilamentMailLog\Models\MailSetting;
-use Bauerdot\FilamentMailLog\Resources\MailSettingResource\Pages\ListMailSettings;
 use Bauerdot\FilamentMailLog\Resources\MailSettingResource\Pages\EditMailSettings;
+use Bauerdot\FilamentMailLog\Resources\MailSettingResource\Pages\ListMailSettings;
+use Filament\Resources\Pages\Page;
+use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 
 class MailSettingResource extends Resource
 {
@@ -26,7 +24,7 @@ class MailSettingResource extends Resource
     {
         return config('filament-maillog.navigation.settings.icon', 'heroicon-o-cog');
     }
-    
+
     public static function getNavigationSort(): ?int
     {
         return config('filament-maillog.navigation.settings.sort');
@@ -36,11 +34,10 @@ class MailSettingResource extends Resource
     {
         return __('filament-maillog::filament-maillog.navigation.group');
     }
-    
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'mail-setting';
-
 
     // The resource uses a custom Edit page which provides the form
     public static function getPages(): array

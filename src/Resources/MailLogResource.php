@@ -2,19 +2,18 @@
 
 namespace Bauerdot\FilamentMailLog\Resources;
 
+use Bauerdot\FilamentMailLog\Models\MailLog;
+use Bauerdot\FilamentMailLog\Resources\MailLogResource\Pages;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
-use Bauerdot\FilamentMailLog\Models\MailLog;
-use Bauerdot\FilamentMailLog\Resources\MailLogResource\Pages;
-use Filament\Actions\ViewAction;
 
 class MailLogResource extends Resource
 {

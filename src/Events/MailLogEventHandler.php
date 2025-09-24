@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Bauerdot\FilamentMailLog\Events;
 
+use Bauerdot\FilamentMailLog\Models\MailLog;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Mail\Events\MessageSending;
-use Illuminate\Support\Str;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Mime\Part\DataPart;
-use Bauerdot\FilamentMailLog\Models\MailLog;
-
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\DataPart;
 use Throwable;
 
 class MailLogEventHandler

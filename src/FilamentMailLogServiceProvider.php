@@ -2,11 +2,11 @@
 
 namespace Bauerdot\FilamentMailLog;
 
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Bauerdot\FilamentMailLog\Events\MailLogEventHandler;
 use Bauerdot\FilamentMailLog\Listeners\MessageSendingListener;
 use Illuminate\Mail\Events\MessageSending;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class FilamentMailLogServiceProvider extends PackageServiceProvider
 {

@@ -2,9 +2,8 @@
 
 namespace Bauerdot\FilamentMailLog\Listeners;
 
-use Illuminate\Mail\Events\MessageSending;
-use Bauerdot\FilamentMailLog\Models\MailSetting;
 use Bauerdot\FilamentMailLog\Models\MailSettingsDto;
+use Illuminate\Mail\Events\MessageSending;
 
 class MessageSendingListener
 {
@@ -44,8 +43,8 @@ class MessageSendingListener
             ? $this->formatOriginalRecipients($originalTo, $originalCc, $originalBcc)
             : $this->getRecipientsInfo($message);
 
-    $redirectedToRaw = $hasRedirectedRecipients ? $settings->sandbox_address : null;
-    $redirectedTo = $this->normalizeEmail($redirectedToRaw) ?? null;
+        $redirectedToRaw = $hasRedirectedRecipients ? $settings->sandbox_address : null;
+        $redirectedTo = $this->normalizeEmail($redirectedToRaw) ?? null;
         $timestamp = date('Y-m-d H:i:s');
 
         // Use a simple inline banner if view not available
@@ -60,11 +59,11 @@ class MessageSendingListener
         $body = method_exists($message, 'getHtmlBody') ? $message->getHtmlBody() : null;
 
         if ($body) {
-            $message->html($banner . $body);
+            $message->html($banner.$body);
         } else {
             $textBody = method_exists($message, 'getTextBody') ? $message->getTextBody() : null;
             if ($textBody) {
-                $message->html($banner . '<pre>' . htmlspecialchars($textBody) . '</pre>');
+                $message->html($banner.'<pre>'.htmlspecialchars($textBody).'</pre>');
                 $message->text($textBody);
             }
         }
@@ -78,44 +77,44 @@ class MessageSendingListener
         $cc = $message->getCc();
         $bcc = $message->getBcc();
 
-        if (!empty($to)) {
-            $toAddresses = array_map(fn($address) => $address->getAddress(), $to);
-            $recipients[] = '<span style="text-decoration: underline">To</span>: ' . implode(', ', $toAddresses);
+        if (! empty($to)) {
+            $toAddresses = array_map(fn ($address) => $address->getAddress(), $to);
+            $recipients[] = '<span style="text-decoration: underline">To</span>: '.implode(', ', $toAddresses);
         }
 
-        if (!empty($cc)) {
-            $ccAddresses = array_map(fn($address) => $address->getAddress(), $cc);
-            $recipients[] = '<span style="text-decoration: underline">CC</span>: ' . implode(', ', $ccAddresses);
+        if (! empty($cc)) {
+            $ccAddresses = array_map(fn ($address) => $address->getAddress(), $cc);
+            $recipients[] = '<span style="text-decoration: underline">CC</span>: '.implode(', ', $ccAddresses);
         }
 
-        if (!empty($bcc)) {
-            $bccAddresses = array_map(fn($address) => $address->getAddress(), $bcc);
-            $recipients[] = '<span style="text-decoration: underline">BCC</span>: ' . implode(', ', $bccAddresses);
+        if (! empty($bcc)) {
+            $bccAddresses = array_map(fn ($address) => $address->getAddress(), $bcc);
+            $recipients[] = '<span style="text-decoration: underline">BCC</span>: '.implode(', ', $bccAddresses);
         }
 
-        return !empty($recipients) ? implode(' | ', $recipients) : 'No recipients found';
+        return ! empty($recipients) ? implode(' | ', $recipients) : 'No recipients found';
     }
 
     private function formatOriginalRecipients(?array $to = null, ?array $cc = null, ?array $bcc = null): string
     {
         $recipients = [];
 
-        if (!empty($to)) {
-            $toAddresses = array_map(fn($address) => $address->getAddress(), $to);
-            $recipients[] = '<span style="text-decoration: underline">To</span>: ' . implode(', ', $toAddresses);
+        if (! empty($to)) {
+            $toAddresses = array_map(fn ($address) => $address->getAddress(), $to);
+            $recipients[] = '<span style="text-decoration: underline">To</span>: '.implode(', ', $toAddresses);
         }
 
-        if (!empty($cc)) {
-            $ccAddresses = array_map(fn($address) => $address->getAddress(), $cc);
-            $recipients[] = '<span style="text-decoration: underline">CC</span>: ' . implode(', ', $ccAddresses);
+        if (! empty($cc)) {
+            $ccAddresses = array_map(fn ($address) => $address->getAddress(), $cc);
+            $recipients[] = '<span style="text-decoration: underline">CC</span>: '.implode(', ', $ccAddresses);
         }
 
-        if (!empty($bcc)) {
-            $bccAddresses = array_map(fn($address) => $address->getAddress(), $bcc);
-            $recipients[] = '<span style="text-decoration: underline">BCC</span>: ' . implode(', ', $bccAddresses);
+        if (! empty($bcc)) {
+            $bccAddresses = array_map(fn ($address) => $address->getAddress(), $bcc);
+            $recipients[] = '<span style="text-decoration: underline">BCC</span>: '.implode(', ', $bccAddresses);
         }
 
-        return !empty($recipients) ? implode(' | ', $recipients) : 'No recipients found';
+        return ! empty($recipients) ? implode(' | ', $recipients) : 'No recipients found';
     }
 
     private function applyGlobalBcc($message, MailSettingsDto $settings): void
@@ -123,7 +122,7 @@ class MessageSendingListener
         $bccAddresses = $settings->bcc_address ?? [];
 
         // Normalize to array and filter invalid/empty addresses
-        if (!is_array($bccAddresses)) {
+        if (! is_array($bccAddresses)) {
             if (is_string($bccAddresses) && trim($bccAddresses) !== '') {
                 $bccAddresses = [$bccAddresses];
             } else {
@@ -148,14 +147,14 @@ class MessageSendingListener
         $originalCc = $message->getCc() ?: [];
         $originalBcc = $message->getBcc() ?: [];
 
-        if (!empty($originalTo)) {
-            $addresses = array_map(fn($address) => $address->getAddress(), $originalTo);
+        if (! empty($originalTo)) {
+            $addresses = array_map(fn ($address) => $address->getAddress(), $originalTo);
             $message->getHeaders()->addTextHeader('X-Original-To', implode(', ', $addresses));
         }
 
-    $filteredTo = $this->filterRecipients($originalTo, $allowedEmails);
-    $filteredCc = $this->filterRecipients($originalCc, $allowedEmails);
-    $filteredBcc = $this->filterRecipients($originalBcc, $allowedEmails);
+        $filteredTo = $this->filterRecipients($originalTo, $allowedEmails);
+        $filteredCc = $this->filterRecipients($originalCc, $allowedEmails);
+        $filteredBcc = $this->filterRecipients($originalBcc, $allowedEmails);
 
         $hasBlockedRecipients = count($filteredTo) < count($originalTo) ||
                                count($filteredCc) < count($originalCc) ||
@@ -166,19 +165,19 @@ class MessageSendingListener
             $filteredTo = array_unique($filteredTo);
         }
 
-        if (!empty($filteredTo)) {
+        if (! empty($filteredTo)) {
             $message->to(...$filteredTo);
         }
-        if (!empty($filteredCc)) {
+        if (! empty($filteredCc)) {
             $message->cc(...$filteredCc);
         }
-        if (!empty($filteredBcc)) {
+        if (! empty($filteredBcc)) {
             $message->bcc(...$filteredBcc);
         }
 
         if ($hasBlockedRecipients) {
             $originalSubject = $message->getSubject();
-            $message->subject("[TEST - " . config('app.name', 'Laravel') . " - " . $environment . "] " . $originalSubject);
+            $message->subject('[TEST - '.config('app.name', 'Laravel').' - '.$environment.'] '.$originalSubject);
         }
     }
 
@@ -208,7 +207,7 @@ class MessageSendingListener
 
         // If stored as array (unexpected), pick first non-empty value
         if (is_array($email)) {
-            $email = array_values(array_filter($email, fn($v) => trim((string) $v) !== ''))[0] ?? null;
+            $email = array_values(array_filter($email, fn ($v) => trim((string) $v) !== ''))[0] ?? null;
         }
 
         $email = trim((string) ($email ?? ''));

@@ -2,9 +2,9 @@
 
 namespace Bauerdot\FilamentMailLog\Tests;
 
+use Bauerdot\FilamentMailLog\FilamentMailLogServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Bauerdot\FilamentMailLog\FilamentMailLogServiceProvider;
 
 class TestCase extends Orchestra
 {

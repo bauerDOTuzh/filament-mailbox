@@ -11,6 +11,6 @@ class FilamentMailLog extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-    return \Bauerdot\FilamentMailLog\FilamentMailLog::class;
+        return \Bauerdot\FilamentMailLog\FilamentMailLog::class;
     }
 }
