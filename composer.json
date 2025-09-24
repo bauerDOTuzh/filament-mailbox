@@ -1,18 +1,18 @@
 {
-    "name": "bauerdot/filament-maillog",
+    "name": "bauerdot/filament-mailbox",
     "description": "Filament plugin to view outgoing mail",
     "keywords": [
-        "Tapp Network",
+        "Bauerdot Network",
         "laravel",
         "maillog",
-        "filament-maillog"
+        "filament-mailbox"
     ],
-    "homepage": "https://github.com/tapp/filament-maillog",
+    "homepage": "https://github.com/bauerdot/filament-mailbox",
     "license": "MIT",
     "authors": [
         {
             "name": "Steve Williamson",
-            "email": "steve@tappnetwork.com",
+            "email": "steve@bauerdotnetwork.com",
             "role": "Developer"
         }
     ],
@@ -41,13 +41,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Bauerdot\\FilamentMailLog\\": "src/",
-            "Bauerdot\\FilamentMailLog\\Database\\Factories\\": "database/factories/"
+            "Bauerdot\\FilamentMailBox\\": "src/",
+            "Bauerdot\\FilamentMailBox\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Bauerdot\\FilamentMailLog\\Tests\\": "tests/"
+            "Bauerdot\\FilamentMailBox\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -75,10 +75,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Bauerdot\\FilamentMailLog\\FilamentMailLogServiceProvider"
+                "Bauerdot\\FilamentMailBox\\FilamentMailBoxServiceProvider"
             ],
             "aliases": {
-                "FilamentMailLog": "Bauerdot\\FilamentMailLog\\Facades\\FilamentMailLog"
+                "FilamentMailBox": "Bauerdot\\FilamentMailBox\\Facades\\FilamentMailBox"
             }
         }
     },

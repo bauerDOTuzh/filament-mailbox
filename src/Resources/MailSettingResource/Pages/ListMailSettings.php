@@ -1,8 +1,8 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Resources\MailSettingResource\Pages;
+namespace Bauerdot\FilamentMailBox\Resources\MailSettingResource\Pages;
 
-use Bauerdot\FilamentMailLog\Resources\MailSettingResource;
+use Bauerdot\FilamentMailBox\Resources\MailSettingResource;
 use Filament\Resources\Pages\ListRecords;
 
 class ListMailSettings extends ListRecords

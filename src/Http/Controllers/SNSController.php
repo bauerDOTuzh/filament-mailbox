@@ -1,12 +1,12 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Http\Controllers;
+namespace Bauerdot\FilamentMailBox\Http\Controllers;
 
 use App\Models\User;
 use Aws\Sns\Exception\InvalidSnsMessageException;
 use Aws\Sns\Message;
 use Aws\Sns\MessageValidator;
-use Bauerdot\FilamentMailLog\Models\MailLog;
+use Bauerdot\FilamentMailBox\Models\MailLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

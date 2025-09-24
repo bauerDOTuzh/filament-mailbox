@@ -1,11 +1,11 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog;
+namespace Bauerdot\FilamentMailBox;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class FilamentMailLogPlugin implements Plugin
+class FilamentMailBoxPlugin implements Plugin
 {
     public static function make(): static
     {
@@ -14,7 +14,7 @@ class FilamentMailLogPlugin implements Plugin
 
     public function getId(): string
     {
-        return 'filament-maillog';
+        return 'filament-mailbox';
     }
 
     public function register(Panel $panel): void
@@ -22,11 +22,11 @@ class FilamentMailLogPlugin implements Plugin
         $panel
             ->resources(
                 [
-                    \Bauerdot\FilamentMailLog\Resources\MailSettingResource::class,
-                    \Bauerdot\FilamentMailLog\Resources\MailLogResource::class,
-                    // \Bauerdot\FilamentMailLog\Resources\MailLogResource::class,
+                    \Bauerdot\FilamentMailBox\Resources\MailSettingResource::class,
+                    \Bauerdot\FilamentMailBox\Resources\MailLogResource::class,
+                    // \Bauerdot\FilamentMailBox\Resources\MailLogResource::class,
                 ]
-                // config('filament-maillog.resources')
+                // config('filament-mailbox.resources')
             );
     }
 

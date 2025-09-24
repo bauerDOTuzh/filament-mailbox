@@ -1,6 +1,6 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Models;
+namespace Bauerdot\FilamentMailBox\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +24,7 @@ class MailSetting extends Model
     ];
 
     // Cache key prefix for settings
-    protected static string $cachePrefix = 'filament-maillog.mail_settings.';
+    protected static string $cachePrefix = 'filament-mailbox.mail_settings.';
 
     // Cache ttl in seconds (null = forever)
     protected static $cacheTtl = null;
@@ -83,18 +83,18 @@ class MailSetting extends Model
         $setting = static::where('key', $key)->first();
         if ($setting) {
             $value = $setting->value;
-            $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
+            $ttl = Config::get('filament-mailbox.mail_settings.cache_ttl', static::$cacheTtl);
             Cache::put($cacheKey, $value, $ttl);
 
             return $value;
         }
 
         // Fall back to config defaults
-        $defaults = Config::get('filament-maillog.mail_settings.defaults', []);
+        $defaults = Config::get('filament-mailbox.mail_settings.defaults', []);
         if (array_key_exists($key, $defaults)) {
             $value = $defaults[$key];
             // Cache the default as well for consistent reads
-            $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
+            $ttl = Config::get('filament-mailbox.mail_settings.cache_ttl', static::$cacheTtl);
             Cache::put($cacheKey, $value, $ttl);
 
             return $value;
@@ -109,8 +109,8 @@ class MailSetting extends Model
     public static function setValue(string $key, $value): void
     {
         // Respect lock settings
-        $lock = Config::get('filament-maillog.mail_settings.lock_values', false);
-        $defaults = Config::get('filament-maillog.mail_settings.defaults', []);
+        $lock = Config::get('filament-mailbox.mail_settings.lock_values', false);
+        $defaults = Config::get('filament-mailbox.mail_settings.defaults', []);
 
         if ($lock && array_key_exists($key, $defaults)) {
             // If locked, don't overwrite default keys
@@ -124,7 +124,7 @@ class MailSetting extends Model
 
         // Update cache
         $cacheKey = static::$cachePrefix.$key;
-        $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
+        $ttl = Config::get('filament-mailbox.mail_settings.cache_ttl', static::$cacheTtl);
         Cache::put($cacheKey, $value, $ttl);
 
         // Also flush DTO cache so the DTO reflects latest values
@@ -140,7 +140,7 @@ class MailSetting extends Model
      */
     public static function allCached(): array
     {
-        $defaults = Config::get('filament-maillog.mail_settings.defaults', []);
+        $defaults = Config::get('filament-mailbox.mail_settings.defaults', []);
 
         $rows = static::all()->pluck('value', 'key')->all();
 
@@ -148,7 +148,7 @@ class MailSetting extends Model
         $merged = array_merge($defaults, $rows);
 
         // Cache each value
-        $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', static::$cacheTtl);
+        $ttl = Config::get('filament-mailbox.mail_settings.cache_ttl', static::$cacheTtl);
         foreach ($merged as $k => $v) {
             Cache::put(static::$cachePrefix.$k, $v, $ttl);
         }
@@ -161,7 +161,7 @@ class MailSetting extends Model
      */
     public static function flushCache(): void
     {
-        $keys = array_keys(Config::get('filament-maillog.mail_settings.defaults', []));
+        $keys = array_keys(Config::get('filament-mailbox.mail_settings.defaults', []));
         foreach ($keys as $k) {
             Cache::forget(static::$cachePrefix.$k);
         }

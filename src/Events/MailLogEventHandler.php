@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Bauerdot\FilamentMailLog\Events;
+namespace Bauerdot\FilamentMailBox\Events;
 
-use Bauerdot\FilamentMailLog\Models\MailLog;
+use Bauerdot\FilamentMailBox\Models\MailLog;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Collection;
@@ -51,8 +51,8 @@ class MailLogEventHandler
                 'message_id' => (string) Str::uuid(),
             ]);
 
-            if (config('filament-maillog.amazon-ses.configuration-set') !== null) {
-                $event->message->getHeaders()->addTextHeader('X-SES-CONFIGURATION-SET', config('filament-maillog.amazon-ses.configuration-set'));
+            if (config('filament-mailbox.amazon-ses.configuration-set') !== null) {
+                $event->message->getHeaders()->addTextHeader('X-SES-CONFIGURATION-SET', config('filament-mailbox.amazon-ses.configuration-set'));
             }
 
             $event->message->getHeaders()->addTextHeader('unique-id', $mailLog->message_id);

@@ -1,8 +1,8 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Tests;
+namespace Bauerdot\FilamentMailBox\Tests;
 
-use Bauerdot\FilamentMailLog\FilamentMailLogServiceProvider;
+use Bauerdot\FilamentMailBox\FilamentMailBoxServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -13,14 +13,14 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Bauerdot\\FilamentMailLog\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'Bauerdot\\FilamentMailBox\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            FilamentMailLogServiceProvider::class,
+            FilamentMailBoxServiceProvider::class,
         ];
     }
 
@@ -29,7 +29,7 @@ class TestCase extends Orchestra
         config()->set('database.default', 'testing');
 
         /*
-        $migration = include __DIR__.'/../database/migrations/create_filament-maillog_table.php.stub';
+        $migration = include __DIR__.'/../database/migrations/create_filament-mailbox_table.php.stub';
         $migration->up();
         */
     }

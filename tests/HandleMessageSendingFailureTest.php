@@ -1,6 +1,6 @@
 <?php
 
-use Bauerdot\FilamentMailLog\Events\MailLogEventHandler;
+use Bauerdot\FilamentMailBox\Events\MailLogEventHandler;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Mime\Email as SymfonyEmail;

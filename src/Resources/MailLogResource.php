@@ -1,9 +1,9 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Resources;
+namespace Bauerdot\FilamentMailBox\Resources;
 
-use Bauerdot\FilamentMailLog\Models\MailLog;
-use Bauerdot\FilamentMailLog\Resources\MailLogResource\Pages;
+use Bauerdot\FilamentMailBox\Models\MailLog;
+use Bauerdot\FilamentMailBox\Resources\MailLogResource\Pages;
 use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Infolists;
@@ -21,32 +21,32 @@ class MailLogResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        return config('filament-maillog.navigation.maillog.register', true);
+        return config('filament-mailbox.navigation.maillog.register', true);
     }
 
     public static function getNavigationIcon(): string
     {
-        return config('filament-maillog.navigation.maillog.icon');
+        return config('filament-mailbox.navigation.maillog.icon');
     }
 
     public static function getNavigationSort(): ?int
     {
-        return config('filament-maillog.navigation.maillog.sort');
+        return config('filament-mailbox.navigation.maillog.sort');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return __('filament-maillog::filament-maillog.navigation.group');
+        return __('filament-mailbox::filament-mailbox.navigation.group');
     }
 
     public static function getLabel(): string
     {
-        return __('filament-maillog::filament-maillog.navigation.maillog.label');
+        return __('filament-mailbox::filament-mailbox.navigation.maillog.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return __('filament-maillog::filament-maillog.navigation.maillog.plural-label');
+        return __('filament-mailbox::filament-mailbox.navigation.maillog.plural-label');
     }
 
     public static function infolist(Schema $infolist): Schema
@@ -54,43 +54,43 @@ class MailLogResource extends Resource
         return $infolist
             ->schema([
                 Infolists\Components\TextEntry::make('message_id')
-                    ->label(trans('filament-maillog::filament-maillog.column.message_id')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.message_id')),
                 Infolists\Components\TextEntry::make('subject')
-                    ->label(trans('filament-maillog::filament-maillog.column.subject')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.subject')),
                 Infolists\Components\TextEntry::make('created_at')
-                    ->label(trans('filament-maillog::filament-maillog.column.created_at'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.created_at'))
                     ->datetime(),
                 Infolists\Components\TextEntry::make('to')
-                    ->label(trans('filament-maillog::filament-maillog.column.to')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.to')),
                 Infolists\Components\TextEntry::make('from')
-                    ->label(trans('filament-maillog::filament-maillog.column.from')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.from')),
                 Infolists\Components\TextEntry::make('cc')
-                    ->label(trans('filament-maillog::filament-maillog.column.cc')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.cc')),
                 Infolists\Components\TextEntry::make('bcc')
-                    ->label(trans('filament-maillog::filament-maillog.column.bcc')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.bcc')),
                 Infolists\Components\TextEntry::make('status')
-                    ->label(trans('filament-maillog::filament-maillog.column.status'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.status'))
                     ->badge(),
                 Infolists\Components\TextEntry::make('delivered')
-                    ->label(trans('filament-maillog::filament-maillog.column.delivered')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.delivered')),
                 Infolists\Components\TextEntry::make('opened')
-                    ->label(trans('filament-maillog::filament-maillog.column.opened')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.opened')),
                 Infolists\Components\TextEntry::make('bounced')
-                    ->label(trans('filament-maillog::filament-maillog.column.bounced')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.bounced')),
                 Infolists\Components\TextEntry::make('complaint')
-                    ->label(trans('filament-maillog::filament-maillog.column.complaint')),
+                    ->label(trans('filament-mailbox::filament-mailbox.column.complaint')),
                 Infolists\Components\TextEntry::make('body')
-                    ->label(trans('filament-maillog::filament-maillog.column.body'))
-                    ->view('filament-maillog::email-html')
+                    ->label(trans('filament-mailbox::filament-mailbox.column.body'))
+                    ->view('filament-mailbox::email-html')
                     ->columnSpanFull(),
                 Infolists\Components\TextEntry::make('headers')
-                    ->label(trans('filament-maillog::filament-maillog.column.headers'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.headers'))
                     ->columnSpanFull(),
                 Infolists\Components\TextEntry::make('attachments')
-                    ->label(trans('filament-maillog::filament-maillog.column.attachments'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.attachments'))
                     ->columnSpanFull(),
                 // Infolists\Components\Section::make('Data')
-                //     ->label(trans('filament-maillog::filament-maillog.column.data'))
+                //     ->label(trans('filament-mailbox::filament-mailbox.column.data'))
                 //     ->icon('heroicon-m-list-bullet')
                 //     ->schema([
                 //         Infolists\Components\TextEntry::make('data_json')
@@ -103,13 +103,13 @@ class MailLogResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort(config('filament-maillog.sort.column', 'created_at'), config('filament-maillog.sort.direction', 'desc'))
+            ->defaultSort(config('filament-mailbox.sort.column', 'created_at'), config('filament-mailbox.sort.direction', 'desc'))
             ->columns([
                 Tables\Columns\TextColumn::make('status')
-                    ->label(trans('filament-maillog::filament-maillog.column.status'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.status'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subject')
-                    ->label(trans('filament-maillog::filament-maillog.column.subject'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.subject'))
                     ->limit(25)
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
                         $state = $column->getState();
@@ -124,19 +124,19 @@ class MailLogResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('to')
-                    ->label(trans('filament-maillog::filament-maillog.column.to'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.to'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('from')
-                    ->label(trans('filament-maillog::filament-maillog.column.from'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.from'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label(trans('filament-maillog::filament-maillog.column.created_at'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label(trans('filament-maillog::filament-maillog.column.updated_at'))
+                    ->label(trans('filament-mailbox::filament-mailbox.column.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

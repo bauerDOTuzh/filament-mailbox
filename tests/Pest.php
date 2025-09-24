@@ -1,5 +1,5 @@
 <?php
 
-use Bauerdot\FilamentMailLog\Tests\TestCase;
+use Bauerdot\FilamentMailBox\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

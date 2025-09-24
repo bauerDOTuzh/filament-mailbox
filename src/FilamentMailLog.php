@@ -1,5 +1,5 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog;
+namespace Bauerdot\FilamentMailBox;
 
-class FilamentMailLog {}
+class FilamentMailBox {}

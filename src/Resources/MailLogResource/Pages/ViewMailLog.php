@@ -1,8 +1,8 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Resources\MailLogResource\Pages;
+namespace Bauerdot\FilamentMailBox\Resources\MailLogResource\Pages;
 
-use Bauerdot\FilamentMailLog\Resources\MailLogResource;
+use Bauerdot\FilamentMailBox\Resources\MailLogResource;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewMailLog extends ViewRecord

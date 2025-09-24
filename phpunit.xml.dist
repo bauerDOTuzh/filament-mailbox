@@ -16,7 +16,7 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name="Tapp Test Suite">
+        <testsuite name="Bauerdot Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

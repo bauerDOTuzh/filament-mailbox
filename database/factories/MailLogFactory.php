@@ -1,8 +1,8 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Database\Factories;
+namespace Bauerdot\FilamentMailBox\Database\Factories;
 
-use Bauerdot\FilamentMailLog\Models\MailLog;
+use Bauerdot\FilamentMailBox\Models\MailLog;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MailLogFactory extends Factory

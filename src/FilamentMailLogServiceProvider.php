@@ -1,19 +1,19 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog;
+namespace Bauerdot\FilamentMailBox;
 
-use Bauerdot\FilamentMailLog\Events\MailLogEventHandler;
-use Bauerdot\FilamentMailLog\Listeners\MessageSendingListener;
+use Bauerdot\FilamentMailBox\Events\MailLogEventHandler;
+use Bauerdot\FilamentMailBox\Listeners\MessageSendingListener;
 use Illuminate\Mail\Events\MessageSending;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class FilamentMailLogServiceProvider extends PackageServiceProvider
+class FilamentMailBoxServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('filament-maillog')
+            ->name('filament-mailbox')
             ->hasConfigFile()
             ->hasViews()
             ->hasTranslations()

@@ -1,9 +1,9 @@
 # Filament plugin to view outgoing mail
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/tapp/filament-maillog.svg?style=flat-square)](https://packagist.org/packages/tapp/filament-maillog)
-![GitHub Tests Action Status](https://github.com/TappNetwork/filament-maillog/actions/workflows/run-tests.yml/badge.svg)
-![GitHub Code Style Action Status](https://github.com/TappNetwork/filament-maillog/actions/workflows/fix-php-code-style-issues.yml/badge.svg)
-[![Total Downloads](https://img.shields.io/packagist/dt/tapp/filament-maillog.svg?style=flat-square)](https://packagist.org/packages/tapp/filament-maillog)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/bauerdot/filament-mailbox.svg?style=flat-square)](https://packagist.org/packages/bauerdot/filament-mailbox)
+![GitHub Tests Action Status](https://github.com/BauerdotNetwork/filament-mailbox/actions/workflows/run-tests.yml/badge.svg)
+![GitHub Code Style Action Status](https://github.com/BauerdotNetwork/filament-mailbox/actions/workflows/fix-php-code-style-issues.yml/badge.svg)
+[![Total Downloads](https://img.shields.io/packagist/dt/bauerdot/filament-mailbox.svg?style=flat-square)](https://packagist.org/packages/bauerdot/filament-mailbox)
 
 This plugin adds an event listener to log emails sent on `mail_logs` database table. It also adds a Filament resource to view the mail logs.
 
@@ -21,26 +21,26 @@ You can install the package via composer:
 ### For Filament 3
 
 ```bash
-composer require tapp/filament-maillog:"^1.0"
+composer require bauerdot/filament-mailbox:"^1.0"
 ```
 
 ### For Filament 4
 
 ```bash
-composer require tapp/filament-maillog:"^2.0"
+composer require bauerdot/filament-mailbox:"^2.0"
 ```
 
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="filament-maillog-migrations"
+php artisan vendor:publish --tag="filament-mailbox-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="filament-maillog-config"
+php artisan vendor:publish --tag="filament-mailbox-config"
 ```
 
 This is the contents of the published config file:
@@ -52,7 +52,7 @@ return [
     ],
 
     'resources' => [
-        'MaiLogResource' => \Bauerdot\FilamentMailLog\Resources\MailLogResource::class,
+        'MaiLogResource' => \Bauerdot\FilamentMailBox\Resources\MailLogResource::class,
     ],
 
     'navigation' => [
@@ -73,7 +73,7 @@ return [
 Optionally, you can publish the translations files with:
 
 ```bash
-php artisan vendor:publish --tag="filament-maillog-translations"
+php artisan vendor:publish --tag="filament-mailbox-translations"
 ```
 
 ## Using the Resource
@@ -82,14 +82,14 @@ Add this plugin to a panel on `plugins()` method.
 E.g. in `app/Providers/Filament/AdminPanelProvider.php`:
 
 ```php
-use Bauerdot\FilamentMailLog\FilamentMailLogPlugin;
+use Bauerdot\FilamentMailBox\FilamentMailBoxPlugin;
  
 public function panel(Panel $panel): Panel
 {
     return $panel
         // ...
         ->plugins([
-            FilamentMailLogPlugin::make(),
+            FilamentMailBoxPlugin::make(),
             //...
         ]);
 }

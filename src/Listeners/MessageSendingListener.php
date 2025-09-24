@@ -1,8 +1,8 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Listeners;
+namespace Bauerdot\FilamentMailBox\Listeners;
 
-use Bauerdot\FilamentMailLog\Models\MailSettingsDto;
+use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 use Illuminate\Mail\Events\MessageSending;
 
 class MessageSendingListener
@@ -51,7 +51,7 @@ class MessageSendingListener
         try {
             // Ensure redirectedTo is a string for the banner view
             $redirectedToForView = $redirectedTo ?? 'None';
-            $banner = view('filament-maillog::banner', compact('environment', 'appName', 'domain', 'hasRedirectedRecipients', 'recipients', 'redirectedToForView', 'timestamp'))->render();
+            $banner = view('filament-mailbox::banner', compact('environment', 'appName', 'domain', 'hasRedirectedRecipients', 'recipients', 'redirectedToForView', 'timestamp'))->render();
         } catch (\Throwable $e) {
             $banner = "<div style='padding:10px;border:2px solid #f00;background:#fff3f3;color:#900;font-family:Arial;'>[{$environment}] {$appName} - Mail Sandbox<br/>Recipients: {$recipients}<br/>Redirected To: {$redirectedTo}</div><br/>";
         }

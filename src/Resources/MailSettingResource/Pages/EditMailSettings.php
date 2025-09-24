@@ -1,10 +1,10 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Resources\MailSettingResource\Pages;
+namespace Bauerdot\FilamentMailBox\Resources\MailSettingResource\Pages;
 
-use Bauerdot\FilamentMailLog\Models\MailSetting;
-use Bauerdot\FilamentMailLog\Models\MailSettingsDto;
-use Bauerdot\FilamentMailLog\Resources\MailSettingResource;
+use Bauerdot\FilamentMailBox\Models\MailSetting;
+use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
+use Bauerdot\FilamentMailBox\Resources\MailSettingResource;
 use Filament\Actions\Action;
 use Filament\Forms\Components;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -22,7 +22,7 @@ class EditMailSettings extends Page implements HasForms
     protected static string $resource = MailSettingResource::class;
 
     // 1. Define the Blade view for this page (use package view namespace)
-    protected string $view = 'filament-maillog::filament.mail-settings.pages.edit-mail-settings';
+    protected string $view = 'filament-mailbox::filament.mail-settings.pages.edit-mail-settings';
 
     // 2. This public property will hold the form's state
     public ?array $data = [];
@@ -44,23 +44,23 @@ class EditMailSettings extends Page implements HasForms
     // 4. Define the entire form in this method
     public function form(Schema $form): Schema
     {
-        $lock = config('filament-maillog.mail_settings.lock_values', false);
-        $defaults = config('filament-maillog.mail_settings.defaults', []);
+        $lock = config('filament-mailbox.mail_settings.lock_values', false);
+        $defaults = config('filament-mailbox.mail_settings.defaults', []);
 
         return $form
             ->schema([
                 Components\Toggle::make('show_environment_banner')
-                    ->label(__('filament-maillog::filament-maillog.navigation.settings.show_environment_banner') ?? 'Show environment banner')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.show_environment_banner') ?? 'Show environment banner')
                     ->disabled(fn () => $lock && array_key_exists('show_environment_banner', $defaults))
                     ->hint(fn () => $lock && array_key_exists('show_environment_banner', $defaults) ? __('This value is locked in config') : null),
 
                 Components\Toggle::make('sandbox_mode')
-                    ->label(__('filament-maillog::filament-maillog.navigation.settings.sandbox_mode') ?? 'Sandbox mode')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.sandbox_mode') ?? 'Sandbox mode')
                     ->disabled(fn () => $lock && array_key_exists('sandbox_mode', $defaults))
                     ->hint(fn () => $lock && array_key_exists('sandbox_mode', $defaults) ? __('This value is locked in config') : null),
 
                 Components\TextInput::make('sandbox_address')
-                    ->label(__('filament-maillog::filament-maillog.navigation.settings.sandbox_address') ?? 'Sandbox address')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.sandbox_address') ?? 'Sandbox address')
                     ->email()
                     ->placeholder('test@example.com')
                     ->columnSpanFull()
@@ -68,14 +68,14 @@ class EditMailSettings extends Page implements HasForms
                     ->hint(fn () => $lock && array_key_exists('sandbox_address', $defaults) ? __('This value is locked in config') : null),
 
                 Components\TagsInput::make('bcc_address')
-                    ->label(__('filament-maillog::filament-maillog.navigation.settings.bcc_address') ?? 'BCC addresses')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.bcc_address') ?? 'BCC addresses')
                     ->placeholder('someone@example.com')
                     ->hint('Separate multiple addresses with commas. Invalid addresses will be ignored.')
                     ->disabled(fn () => $lock && array_key_exists('bcc_address', $defaults))
                     ->hint(fn () => $lock && array_key_exists('bcc_address', $defaults) ? __('This value is locked in config') : 'Separate multiple addresses with commas. Invalid addresses will be ignored.'),
 
                 Components\TagsInput::make('allowed_emails')
-                    ->label(__('filament-maillog::filament-maillog.navigation.settings.allowed_emails') ?? 'Allowed emails')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.allowed_emails') ?? 'Allowed emails')
                     ->placeholder('allowed@example.com')
                     ->hint('Separate multiple addresses with commas. Only valid addresses will be used.')
                     ->disabled(fn () => $lock && array_key_exists('allowed_emails', $defaults))
@@ -89,8 +89,8 @@ class EditMailSettings extends Page implements HasForms
      */
     private function lockedKeys(): array
     {
-        $lock = config('filament-maillog.mail_settings.lock_values', false);
-        $defaults = config('filament-maillog.mail_settings.defaults', []);
+        $lock = config('filament-mailbox.mail_settings.lock_values', false);
+        $defaults = config('filament-mailbox.mail_settings.defaults', []);
 
         return $lock ? array_keys($defaults) : [];
     }
@@ -104,12 +104,12 @@ class EditMailSettings extends Page implements HasForms
     {
         return [
             Action::make('sendTestEmail')
-                ->label(__('filament-maillog::filament-maillog.actions.send_test_email'))
-                ->modalHeading(__('filament-maillog::filament-maillog.actions.send_test_email_heading'))
-                ->modalSubmitActionLabel(__('filament-maillog::filament-maillog.actions.send'))
+                ->label(__('filament-mailbox::filament-mailbox.actions.send_test_email'))
+                ->modalHeading(__('filament-mailbox::filament-mailbox.actions.send_test_email_heading'))
+                ->modalSubmitActionLabel(__('filament-mailbox::filament-mailbox.actions.send'))
                 ->schema([ // In v4, use form() instead of schema() for modal actions
                     Components\TextInput::make('testEmailRecipient')
-                        ->label(__('filament-maillog::filament-maillog.actions.recipient'))
+                        ->label(__('filament-mailbox::filament-mailbox.actions.recipient'))
                         ->email()
                         ->placeholder('test@example.com'),
                 ])
@@ -144,8 +144,8 @@ class EditMailSettings extends Page implements HasForms
     {
         $data = $this->form->getState();
 
-        $lock = config('filament-maillog.mail_settings.lock_values', false);
-        $defaults = config('filament-maillog.mail_settings.defaults', []);
+        $lock = config('filament-mailbox.mail_settings.lock_values', false);
+        $defaults = config('filament-mailbox.mail_settings.defaults', []);
 
         foreach ($data as $key => $value) {
             if ($lock && array_key_exists($key, $defaults)) {

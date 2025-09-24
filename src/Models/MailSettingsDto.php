@@ -1,6 +1,6 @@
 <?php
 
-namespace Bauerdot\FilamentMailLog\Models;
+namespace Bauerdot\FilamentMailBox\Models;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -54,19 +54,19 @@ final class MailSettingsDto
 
     public static function cacheKey(): string
     {
-        return 'filament-maillog.mail_settings.dto';
+        return 'filament-mailbox.mail_settings.dto';
     }
 
     public static function fromConfigAndModel(bool $useCache = true): self
     {
         $cacheKey = self::cacheKey();
-        $ttl = Config::get('filament-maillog.mail_settings.cache_ttl', null);
+        $ttl = Config::get('filament-mailbox.mail_settings.cache_ttl', null);
 
         if ($useCache && Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
 
-        $defaults = Config::get('filament-maillog.mail_settings.defaults', []);
+        $defaults = Config::get('filament-mailbox.mail_settings.defaults', []);
 
         // Pull db values (MailSetting::allCached will merge defaults)
         $rows = MailSetting::allCached();

@@ -6,8 +6,8 @@ return [
     ],
 
     'resources' => [
-        'MailLogResource' => \Bauerdot\FilamentMailLog\Resources\MailLogResource::class,
-        'MailSettingResource' => \Bauerdot\FilamentMailLog\Resources\MailSettingResource::class,
+        'MailLogResource' => \Bauerdot\FilamentMailBox\Resources\MailLogResource::class,
+        'MailSettingResource' => \Bauerdot\FilamentMailBox\Resources\MailSettingResource::class,
     ],
 
     'navigation' => [
