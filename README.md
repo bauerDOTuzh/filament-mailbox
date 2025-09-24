@@ -1,33 +1,20 @@
-# Filament plugin to view outgoing mail
+# Under Active development - use on your own risk
+# Filament plugin to add sandbox banner to all laravel emails
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/bauerdot/filament-mailbox.svg?style=flat-square)](https://packagist.org/packages/bauerdot/filament-mailbox)
-![GitHub Tests Action Status](https://github.com/BauerdotNetwork/filament-mailbox/actions/workflows/run-tests.yml/badge.svg)
-![GitHub Code Style Action Status](https://github.com/BauerdotNetwork/filament-mailbox/actions/workflows/fix-php-code-style-issues.yml/badge.svg)
+![GitHub Tests Action Status](https://github.com/BauerdotUZH/filament-mailbox/actions/workflows/run-tests.yml/badge.svg)
+![GitHub Code Style Action Status](https://github.com/BauerdotUZH/filament-mailbox/actions/workflows/fix-php-code-style-issues.yml/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/bauerdot/filament-mailbox.svg?style=flat-square)](https://packagist.org/packages/bauerdot/filament-mailbox)
 
-This plugin adds an event listener to log emails sent on `mail_logs` database table. It also adds a Filament resource to view the mail logs.
-
-## Version Compatibility
-
- Filament | Filament MailLog
-:---------|:---------------------------
- 3.x      | 1.x
- 4.x      | 2.x
+This plugin adds, based on managable config in Filament admin panel, a banner to all outgoing emails. Additionally, this package includes small preview of all outgoing emails in Filament admin panel, this past is inspured by TappNetwork package.
 
 ## Installation
 
 You can install the package via composer:
 
-### For Filament 3
 
 ```bash
-composer require bauerdot/filament-mailbox:"^1.0"
-```
-
-### For Filament 4
-
-```bash
-composer require bauerdot/filament-mailbox:"^2.0"
+composer require bauerdot/filament-mailbox
 ```
 
 You can publish and run the migrations with:
@@ -43,32 +30,6 @@ You can publish the config file with:
 php artisan vendor:publish --tag="filament-mailbox-config"
 ```
 
-This is the contents of the published config file:
-
-```php
-return [
-    'amazon-ses' => [
-        'configuration-set' => null,
-    ],
-
-    'resources' => [
-        'MaiLogResource' => \Bauerdot\FilamentMailBox\Resources\MailLogResource::class,
-    ],
-
-    'navigation' => [
-        'maillog' => [
-            'register' => true,
-            'sort' => 1,
-            'icon' => 'heroicon-o-rectangle-stack',
-        ],
-    ],
-
-    'sort' => [
-        'column' => 'created_at',
-        'direction' => 'desc',
-    ],
-];
-```
 
 Optionally, you can publish the translations files with:
 
@@ -115,7 +76,6 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
--   [Steve Williamson](https://github.com/swilla)
 -   [All Contributors](../../contributors)
 
 ## License

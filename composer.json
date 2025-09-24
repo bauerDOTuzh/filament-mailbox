@@ -1,8 +1,7 @@
 {
     "name": "bauerdot/filament-mailbox",
-    "description": "Filament plugin to view outgoing mail",
+    "description": "Filament plugin to add sandbox banner to all laravel emails",
     "keywords": [
-        "Bauerdot Network",
         "laravel",
         "maillog",
         "filament-mailbox"
@@ -11,13 +10,13 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Steve Williamson",
-            "email": "steve@bauerdotnetwork.com",
+            "name": "bauerDOTuzh",
+            "email": "91192620+bauerDOTuzh@users.noreply.github.com",
             "role": "Developer"
         }
     ],
     "suggest": {
-        "filament/filament": "^3.0-stable - Adds Filament admin panel integration"
+        "filament/filament": "^4.0 - Adds Filament admin panel integration"
     },
     "require": {
         "php": "^8.2",
