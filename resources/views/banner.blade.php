@@ -14,12 +14,12 @@
             </tr>
             <tr>
                 <td style='padding: 5px 15px 5px 0; white-space: nowrap; vertical-align: top;'><strong>{{ $hasRedirectedRecipients ? 'Original ' : '' }}Recipients:</strong></td>
-                <td style='padding: 5px 0;'>{{ $recipients }}</td>
+                <td style='padding: 5px 0;'>{!! $recipients !!}</td>
             </tr>
             @if($hasRedirectedRecipients)
             <tr>
                 <td style='padding: 5px 15px 5px 0; white-space: nowrap;'><strong>Redirected To:</strong></td>
-                <td style='padding: 5px 0;'>{{ ${'redirectedToForView'} ?? ${'redirectedTo'} ?? 'None' }}</td>
+                <td style='padding: 5px 0;'>{{ $redirectedToForView ?? $redirectedTo ?? 'None' }}</td>
             </tr>
             @endif
         </table>

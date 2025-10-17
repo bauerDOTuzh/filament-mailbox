@@ -4,6 +4,7 @@ namespace Bauerdot\FilamentMailBox\Resources;
 
 use Bauerdot\FilamentMailBox\Models\MailLog;
 use Bauerdot\FilamentMailBox\Resources\MailLogResource\Pages;
+use Bauerdot\FilamentMailBox\Resources\MailLogResource\Widgets\MailStatsWidget;
 use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Infolists;
@@ -128,14 +129,11 @@ class MailLogResource extends Resource
                     ->label(trans('filament-mailbox::filament-mailbox.column.to'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('from')
-                    ->label(trans('filament-mailbox::filament-mailbox.column.from'))
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(trans('filament-mailbox::filament-mailbox.column.created_at'))
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label(trans('filament-mailbox::filament-mailbox.column.updated_at'))
                     ->dateTime()
@@ -164,6 +162,7 @@ class MailLogResource extends Resource
             ])
             ->recordActions([
                 ViewAction::make(),
+                \Bauerdot\FilamentMailBox\Resources\MailLogResource\Actions\ResendMailAction::make(),
             ]);
     }
 
@@ -178,7 +177,24 @@ class MailLogResource extends Resource
     {
         return [
             'index' => Pages\ListMailLogs::route('/'),
-            // 'view' => Pages\ViewMailLog::route('/{record}'),
+            'view' => Pages\ViewMailLog::route('/{record}'),
+        ];
+    }
+
+
+    /**
+     * Normalize various mail recipient shapes and format them for display.
+     *
+     * Accepts arrays, JSON strings, objects, numeric lists, and associative maps
+     * such as {"a.bauer@email.cz": null}.
+     *
+     * @param mixed $emails
+     */
+
+     public static function getWidgets(): array
+    {
+        return [
+             MailStatsWidget::class,
         ];
     }
 }

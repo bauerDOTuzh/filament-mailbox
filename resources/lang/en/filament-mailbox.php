@@ -38,4 +38,16 @@ return [
     'actions.send_test_email_heading' => 'Send test email',
     'actions.send' => 'Send',
     'actions.recipient' => 'Recipient email',
+    // Resend action
+    'resend_email_heading' => 'Resend email',
+    'resend_email_description' => 'Confirm you want to resend this email.',
+    'resend_email_success' => 'Mail will be resent in the background',
+    'resend_email_error' => 'Failed to resend mail',
+    'resend_email_heading' => 'Resend email',
+    'to' => 'To',
+    'cc' => 'CC',
+    'bcc' => 'BCC',
+    'insert_multiple_email_placelholder' => 'Enter one or more email addresses',
+    'add_attachments' => 'Include attachments',
+    'no_attachments_available' => 'No attachments were stored for this email, nothing to include.',
 ];

@@ -2,7 +2,6 @@
 
 namespace Bauerdot\FilamentMailBox;
 
-use Bauerdot\FilamentMailBox\Events\MailLogEventHandler;
 use Bauerdot\FilamentMailBox\Listeners\MessageSendingListener;
 use Illuminate\Mail\Events\MessageSending;
 use Spatie\LaravelPackageTools\Package;
@@ -23,9 +22,10 @@ class FilamentMailBoxServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        $this->app['events']->subscribe(MailLogEventHandler::class);
 
-        // Register mail message sending listener
+        // Register the delegating mail message sending listener. It will delegate
+        // to the focused listeners internally. We register only this one to avoid
+        // duplicate handling (don't register the split listeners directly).
         $this->app['events']->listen(MessageSending::class, MessageSendingListener::class);
     }
 }
