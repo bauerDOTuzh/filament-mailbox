@@ -24,9 +24,7 @@ class FilamentMailBoxPlugin implements Plugin
                 [
                     \Bauerdot\FilamentMailBox\Resources\MailSettingResource::class,
                     \Bauerdot\FilamentMailBox\Resources\MailLogResource::class,
-                    // \Bauerdot\FilamentMailBox\Resources\MailLogResource::class,
                 ]
-                // config('filament-mailbox.resources')
             );
     }
 

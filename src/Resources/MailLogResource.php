@@ -26,7 +26,8 @@ class MailLogResource extends Resource
 
     public static function getNavigationIcon(): string
     {
-        return config('filament-mailbox.navigation.maillog.icon');
+        // Ensure we always return a string even if configuration is not published.
+        return config('filament-mailbox.navigation.maillog.icon', 'heroicon-o-rectangle-stack');
     }
 
     public static function getNavigationSort(): ?int
