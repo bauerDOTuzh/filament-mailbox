@@ -21,6 +21,8 @@ class ResendMailAction extends Action
         return 'resend_mail_action';
     }
 
+
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -36,18 +38,18 @@ class ResendMailAction extends Action
                     ->label(__('filament-mailbox::filament-mailbox.to'))
                     ->placeholder(__('filament-mailbox::filament-mailbox.insert_multiple_email_placelholder'))
                     ->nestedRecursiveRules(['email'])
-                    ->default(fn ($record): array => ! empty($record->to) ? explode(',', $record->to) : [])
+                    ->default(fn ($record): array => ! empty($record->to) ? array_values(array_filter(array_map('trim', explode(',', $record->to)))) : [])
                     ->required(),
                 TagsInput::make('cc')
                     ->label(__('filament-mailbox::filament-mailbox.cc'))
                     ->placeholder(__('filament-mailbox::filament-mailbox.insert_multiple_email_placelholder'))
                     ->nestedRecursiveRules(['email'])
-                    ->default(fn ($record): array => ! empty($record->cc) ? explode(',', $record->cc) : []),
+                    ->default(fn ($record): array => ! empty($record->cc) ? array_values(array_filter(array_map('trim', explode(',', $record->cc)))) : []),
                 TagsInput::make('bcc')
                     ->label(__('filament-mailbox::filament-mailbox.bcc'))
                     ->placeholder(__('filament-mailbox::filament-mailbox.insert_multiple_email_placelholder'))
                     ->nestedRecursiveRules(['email'])
-                    ->default(fn ($record): array => ! empty($record->bcc) ? explode(',', $record->bcc) : []),
+                    ->default(fn ($record): array => ! empty($record->bcc) ? array_values(array_filter(array_map('trim', explode(',', $record->bcc)))) : []),
                 Radio::make('attachments')
                     ->label(__('filament-mailbox::filament-mailbox.add_attachments'))
                     ->boolean()

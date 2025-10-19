@@ -19,6 +19,11 @@ final class MailSettingsDto
     public array $bcc_address;
 
     public array $allowed_emails;
+    /**
+     * Whether the current mailer supports delivery statistics (open/click/etc).
+     */
+    public bool $supports_stats = true;
+
 
     public function __construct(array $data)
     {
@@ -27,6 +32,7 @@ final class MailSettingsDto
         $this->sandbox_address = $data['sandbox_address'] ?? null;
         $this->bcc_address = $this->normalizeEmailList($data['bcc_address'] ?? []);
         $this->allowed_emails = $this->normalizeEmailList($data['allowed_emails'] ?? []);
+        $this->supports_stats = (bool) ($data['supports_stats'] ?? true);
     }
 
     private function normalizeEmailList($value): array
@@ -62,9 +68,22 @@ final class MailSettingsDto
         $cacheKey = self::cacheKey();
         $ttl = Config::get('filament-mailbox.mail_settings.cache_ttl', null);
 
-        if ($useCache && Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
+        // if ($useCache && Cache::has($cacheKey)) {
+        //     $cached = Cache::get($cacheKey);
+        //     // Ensure cached item is a fully-initialized DTO. Older cached objects (or arrays)
+        //     // could lead to uninitialized typed properties. Use reflection to verify.
+        //     if ($cached instanceof self) {
+        //         try {
+        //             $rp = new \ReflectionProperty(self::class, 'supports_stats');
+        //             if ($rp->isInitialized($cached)) {
+        //                 return $cached;
+        //             }
+        //         } catch (\ReflectionException $e) {
+        //             // If reflection fails for any reason, ignore and rebuild below.
+        //         }
+        //     }
+        //     // If cache contained something else (array, older object), fall through to rebuild.
+        // }
 
         $defaults = Config::get('filament-mailbox.mail_settings.defaults', []);
 
@@ -75,7 +94,20 @@ final class MailSettingsDto
 
         $dto = new self($merged);
 
-        Cache::put($cacheKey, $dto, $ttl);
+        // Determine mailer/driver and derive capability flags. We prefer the framework config
+        // `mail.default` (Laravel uses MAIL_MAILER env)
+        $mailer = Config::get('mail.default', null);
+        $driver = is_string($mailer) ? strtolower($mailer) : null;
+
+        // For certain drivers (e.g. smtp or log) we do not have meaningful delivery stats
+        if (in_array($driver, ['smtp', 'log'], true)) {
+            $dto->supports_stats = false;
+        }
+        else {
+            $dto->supports_stats = true;
+        }
+
+        // Cache::put($cacheKey, $dto, $ttl);
 
         return $dto;
     }

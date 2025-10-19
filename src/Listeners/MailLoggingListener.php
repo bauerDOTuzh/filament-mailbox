@@ -2,6 +2,7 @@
 
 namespace Bauerdot\FilamentMailBox\Listeners;
 
+use Bauerdot\FilamentMailBox\Enums\MailStatus;
 use Bauerdot\FilamentMailBox\Models\MailLog;
 use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 use Illuminate\Mail\Events\MessageSending;
@@ -39,8 +40,12 @@ class MailLoggingListener
                 'headers' => $message->getHeaders()->toString(),
                 'attachments' => $this->saveAttachments($message),
                 'message_id' => (string) Str::uuid(),
-                'status' => 'sent',
             ]);
+
+            // Ensure initial status is set to UNSENT without allowing mass-assignment
+            $mailLog->status = MailStatus::UNSENT;
+            $mailLog->save();
+
 
             if (config('filament-mailbox.amazon-ses.configuration-set') !== null) {
                 $event->message->getHeaders()->addTextHeader('X-SES-CONFIGURATION-SET', config('filament-mailbox.amazon-ses.configuration-set'));
@@ -60,18 +65,13 @@ class MailLoggingListener
 
         if (! is_array($bccAddresses)) {
             if (is_string($bccAddresses) && trim($bccAddresses) !== '') {
-                $bccAddresses = [$bccAddresses];
+                $bccAddresses = [$this->normalizeEmail($bccAddresses)];
             } else {
                 $bccAddresses = [];
             }
         }
 
-        foreach ($bccAddresses as $bccAddress) {
-            $email = $this->normalizeEmail($bccAddress);
-            if ($email !== null) {
-                $message->bcc($email);
-            }
-        }
+        $message->bcc(...$bccAddresses);
     }
 
     private function applySandboxRedirection($message, string $environment, MailSettingsDto $settings): void
@@ -151,9 +151,6 @@ class MailLoggingListener
         $addresses = collect($address)->map(fn ($address) => $address->toString());
         return $addresses->count() > 0 ? $addresses->implode(', ') : null;
 
-        // $addresses = collect($address)->flatMap(fn ($address) => [$address->getAddress() => $address->getName() === '' ? null : $address->getName()]);
-
-        // return $addresses->count() > 0 ? $addresses : null;
     }
 
     protected function saveAttachments(Email $message): ?string
@@ -166,4 +163,12 @@ class MailLoggingListener
             ->map(fn (DataPart $part) => $part->toString())
             ->implode("\n\n");
     }
+
+    /**
+     * Determine if the current mail transport/mailer should be auto-marked as delivered.
+     *
+     * @param array $allowedTransports
+     * @return bool
+     */
+    // autodeliver handling removed — capability is no longer tracked here
 }

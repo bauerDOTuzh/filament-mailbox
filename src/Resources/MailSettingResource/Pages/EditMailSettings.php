@@ -2,18 +2,19 @@
 
 namespace Bauerdot\FilamentMailBox\Resources\MailSettingResource\Pages;
 
+use Filament\Actions\Action;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components;
+use Filament\Resources\Pages\Page;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Bauerdot\FilamentMailBox\Models\MailSetting;
 use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 use Bauerdot\FilamentMailBox\Resources\MailSettingResource;
-use Filament\Actions\Action;
-use Filament\Forms\Components;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Notifications\Notification;
-use Filament\Resources\Pages\Page;
-use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 class EditMailSettings extends Page implements HasForms
 {
@@ -47,41 +48,131 @@ class EditMailSettings extends Page implements HasForms
         $lock = config('filament-mailbox.mail_settings.lock_values', false);
         $defaults = config('filament-mailbox.mail_settings.defaults', []);
 
+        $mailer = $this->getMailerInfo();
+
+        // Precompute values to avoid closures that might access component container early
+        $transportState = $mailer['transport'] ?? 'unknown';
+        $connectionHint = $mailer['connection'] ? __('Connection: :conn', ['conn' => $mailer['connection']]) : null;
+        $remoteIpState = $mailer['remote_ip'] ?? __('Unknown');
+        $noteHint = $mailer['note'] ?? null;
+
+        $lockedShowEnvironmentBanner = $lock && array_key_exists('show_environment_banner', $defaults);
+        $lockedSandboxMode = $lock && array_key_exists('sandbox_mode', $defaults);
+        $lockedSandboxAddress = $lock && array_key_exists('sandbox_address', $defaults);
+        $lockedBccAddress = $lock && array_key_exists('bcc_address', $defaults);
+        $lockedAllowedEmails = $lock && array_key_exists('allowed_emails', $defaults);
+
         return $form
             ->schema([
+                // Read-only mailer / connection info (use Placeholder for pure display)
+                TextEntry::make('mail_transport')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.current_mail_transport') ?? 'Current mail transport')
+                    // ->content($transportState)
+                    ->state($transportState)
+                    ->hint($connectionHint),
+
+                TextEntry::make('mail_remote_ip')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.current_mail_remote_ip') ?? 'Remote IP')
+                    ->state($remoteIpState)
+                    ->hint($noteHint),
+
+                TextEntry::make('supports_stats')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.delivery_stats_supported') ?? 'Delivery stats supported')
+                    ->state(MailSettingsDto::fromConfigAndModel()->supports_stats ? __('Yes') : __('No')),
+
                 Components\Toggle::make('show_environment_banner')
                     ->label(__('filament-mailbox::filament-mailbox.navigation.settings.show_environment_banner') ?? 'Show environment banner')
-                    ->disabled(fn () => $lock && array_key_exists('show_environment_banner', $defaults))
-                    ->hint(fn () => $lock && array_key_exists('show_environment_banner', $defaults) ? __('This value is locked in config') : null),
+                    ->disabled($lockedShowEnvironmentBanner)
+                    ->hint($lockedShowEnvironmentBanner ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : null),
 
                 Components\Toggle::make('sandbox_mode')
                     ->label(__('filament-mailbox::filament-mailbox.navigation.settings.sandbox_mode') ?? 'Sandbox mode')
-                    ->disabled(fn () => $lock && array_key_exists('sandbox_mode', $defaults))
-                    ->hint(fn () => $lock && array_key_exists('sandbox_mode', $defaults) ? __('This value is locked in config') : null),
+                    ->disabled($lockedSandboxMode)
+                    ->hint($lockedSandboxMode ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : null),
 
                 Components\TextInput::make('sandbox_address')
                     ->label(__('filament-mailbox::filament-mailbox.navigation.settings.sandbox_address') ?? 'Sandbox address')
                     ->email()
-                    ->placeholder('test@example.com')
+                    ->placeholder(__('filament-mailbox::filament-mailbox.placeholders.example_email'))
                     ->columnSpanFull()
-                    ->disabled(fn () => $lock && array_key_exists('sandbox_address', $defaults))
-                    ->hint(fn () => $lock && array_key_exists('sandbox_address', $defaults) ? __('This value is locked in config') : null),
+                    ->disabled($lockedSandboxAddress)
+                    ->hint($lockedSandboxAddress ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : null),
 
                 Components\TagsInput::make('bcc_address')
                     ->label(__('filament-mailbox::filament-mailbox.navigation.settings.bcc_address') ?? 'BCC addresses')
-                    ->placeholder('someone@example.com')
-                    ->hint('Separate multiple addresses with commas. Invalid addresses will be ignored.')
-                    ->disabled(fn () => $lock && array_key_exists('bcc_address', $defaults))
-                    ->hint(fn () => $lock && array_key_exists('bcc_address', $defaults) ? __('This value is locked in config') : 'Separate multiple addresses with commas. Invalid addresses will be ignored.'),
+                    ->placeholder(__('filament-mailbox::filament-mailbox.placeholders.example_email'))
+                    ->disabled($lockedBccAddress)
+                    ->hint($lockedBccAddress ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : __('filament-mailbox::filament-mailbox.hints.bcc_help')),
 
                 Components\TagsInput::make('allowed_emails')
                     ->label(__('filament-mailbox::filament-mailbox.navigation.settings.allowed_emails') ?? 'Allowed emails')
-                    ->placeholder('allowed@example.com')
-                    ->hint('Separate multiple addresses with commas. Only valid addresses will be used.')
-                    ->disabled(fn () => $lock && array_key_exists('allowed_emails', $defaults))
-                    ->hint(fn () => $lock && array_key_exists('allowed_emails', $defaults) ? __('This value is locked in config') : 'Separate multiple addresses with commas. Only valid addresses will be used.'),
+                    ->placeholder(__('filament-mailbox::filament-mailbox.placeholders.example_email'))
+                    ->disabled($lockedAllowedEmails)
+                    ->hint($lockedAllowedEmails ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : __('filament-mailbox::filament-mailbox.hints.allowed_help')),
             ])
             ->statePath('data'); // Link the form to the $data property
+    }
+
+    /**
+     * Determine mailer/transport and best-effort remote IP/connection info.
+     * Returns an array with keys: transport, connection, remote_ip, note
+     */
+    private function getMailerInfo(): array
+    {
+        try {
+            $mailerName = config('mail.default') ?? 'default';
+            $mailers = config('mail.mailers', []);
+            $mailer = $mailers[$mailerName] ?? [];
+
+            $transport = $mailer['transport'] ?? $mailerName ?? 'unknown';
+
+            $connection = null;
+            $remoteIp = null;
+            $note = null;
+
+            if ($transport === 'smtp' || $transport === 'smtp+tls' || $transport === 'smtp+ssl') {
+                $host = $mailer['host'] ?? null;
+                $port = $mailer['port'] ?? null;
+                if ($host) {
+                    $connection = $host . ($port ? ":{$port}" : '');
+                    // best-effort DNS resolution (no network side-effects beyond DNS)
+                    $resolved = @gethostbyname($host);
+                    if ($resolved && $resolved !== $host) {
+                        $remoteIp = $resolved;
+                    }
+                }
+            } elseif ($transport === 'log') {
+                // show log channel if configured
+                $channel = $mailer['channel'] ?? config('logging.channels.mail') ?? config('logging.default');
+                $connection = 'log' . ($channel ? " (channel: {$channel})" : '');
+                $note = __('filament-mailbox::filament-mailbox.hints.using_log_transport');
+            } else {
+                // generic fallback: display mailer config summary
+                if (! empty($mailer)) {
+                    $connectionParts = [];
+                    foreach (['host', 'port', 'username', 'channel'] as $k) {
+                        if (isset($mailer[$k])) {
+                            $connectionParts[] = "{$k}=" . $mailer[$k];
+                        }
+                    }
+                    $connection = $connectionParts ? implode(', ', $connectionParts) : null;
+                }
+            }
+
+            return [
+                'transport' => $transport,
+                'connection' => $connection,
+                'remote_ip' => $remoteIp,
+                'note' => $note,
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'transport' => 'unknown',
+                'connection' => null,
+                'remote_ip' => null,
+                'note' => null,
+            ];
+        }
     }
 
     /**
@@ -111,7 +202,7 @@ class EditMailSettings extends Page implements HasForms
                     Components\TextInput::make('testEmailRecipient')
                         ->label(__('filament-mailbox::filament-mailbox.actions.recipient'))
                         ->email()
-                        ->placeholder('test@example.com'),
+                        ->placeholder(__('filament-mailbox::filament-mailbox.placeholders.example_email')),
                 ])
                 ->action(function (array $data): void {
                     $dto = MailSettingsDto::fromConfigAndModel();
@@ -120,20 +211,20 @@ class EditMailSettings extends Page implements HasForms
                     if (empty($recipient) || ! filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
                         Notification::make()
                             ->danger()
-                            ->title('No recipient available to send test email')
+                            ->title(__('filament-mailbox::filament-mailbox.notifications.no_recipient'))
                             ->send();
 
                         return;
                     }
 
                     try {
-                        Mail::raw('This is a test email from Filament Mail Log plugin.', function ($m) use ($recipient) {
-                            $m->to($recipient)->subject('Filament Mail Log — Test Message');
+                        Mail::raw(__('filament-mailbox::filament-mailbox.notifications.test_email_body'), function ($m) use ($recipient) {
+                            $m->to($recipient)->subject(__('filament-mailbox::filament-mailbox.notifications.test_email_subject'));
                         });
 
-                        Notification::make()->success()->title('Test email sent')->body("Sent to: {$recipient}")->send();
+                        Notification::make()->success()->title(__('filament-mailbox::filament-mailbox.notifications.test_sent_title'))->body(__('filament-mailbox::filament-mailbox.notifications.test_sent_body', ['recipient' => $recipient]))->send();
                     } catch (\Throwable $e) {
-                        Notification::make()->danger()->title('Failed to send test email')->body($e->getMessage())->send();
+                        Notification::make()->danger()->title(__('filament-mailbox::filament-mailbox.notifications.test_failed_title'))->body($e->getMessage())->send();
                     }
                 }),
         ];

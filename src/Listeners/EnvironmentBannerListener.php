@@ -28,7 +28,7 @@ class EnvironmentBannerListener
     // Copy of existing addEnvironmentBanner and helpers but scoped to banner only
     protected function addEnvironmentBanner($message, string $environment, MailSettingsDto $settings, ?array $originalTo = null, ?array $originalCc = null, ?array $originalBcc = null): void
     {
-        $domain = parse_url(config('app.url'), PHP_URL_HOST) ?: 'unknown-domain';
+        $domain = parse_url(config('app.url'), PHP_URL_HOST) ?: __('filament-mailbox::filament-mailbox.banner.unknown_domain');
         $appName = config('app.name', 'Laravel');
 
         $hasRedirectedRecipients = $originalTo !== null;
@@ -37,17 +37,36 @@ class EnvironmentBannerListener
             ? $this->formatOriginalRecipients($originalTo, $originalCc, $originalBcc)
             : $this->getRecipientsInfo($message);
 
-        $redirectedToRaw = $hasRedirectedRecipients ? $settings->sandbox_address : null;
-        $redirectedTo = $this->normalizeEmail($redirectedToRaw) ?? null;
-        $timestamp = date('Y-m-d H:i:s');
-
-        try {
-            $redirectedToForView = $redirectedTo ?? 'None';
-            $banner = view('filament-mailbox::banner', compact('environment', 'appName', 'domain', 'hasRedirectedRecipients', 'recipients', 'redirectedToForView', 'timestamp'))->render();
-        } catch (\Throwable $e) {
-            $banner = "<div style='padding:10px;border:2px solid #f00;background:#fff3f3;color:#900;font-family:Arial;'>[{$environment}] {$appName} - Mail Sandbox<br/>Recipients: {$recipients}<br/>Redirected To: {$redirectedTo}</div><br/>";
+        // Render banner using Blade view from the package views. The view expects
+        // Determine redirected-t   o address when sandbox redirection is enabled
+        $redirectedTo = null;
+        if ($environment !== 'production' && $settings->sandbox_mode) {
+            $redirectedTo = $this->normalizeEmail($settings->sandbox_address ?? null);
         }
 
+        $viewData = [
+            'appName' => $appName,
+            'environment' => $environment,
+            'domain' => $domain,
+            'hasRedirectedRecipients' => $hasRedirectedRecipients,
+            'recipients' => $recipients,
+            'redirectedTo' => $redirectedTo,
+            'timestamp' => now()->toDateTimeString(),
+        ];
+
+        // Use the package view namespace registered by Spatie's package tools
+        $banner = null;
+        try {
+            $banner = view('filament-mailbox::banner', $viewData)->render();
+        } catch (\Throwable $e) {
+            // If rendering fails (e.g. view namespace not registered in tests),
+            // we'll fall back to a minimal inline banner so the behavior is
+            // consistent even without the published view files.
+            $banner = '<div style="background:#f5f5f5;padding:8px;border-bottom:1px solid #ddd;font-family:Arial,Helvetica,sans-serif;font-size:12px;">'
+                .htmlspecialchars(sprintf('%s environment - %s', $appName, $environment))
+                .'</div>';
+        }
+        
         $body = method_exists($message, 'getHtmlBody') ? $message->getHtmlBody() : null;
 
         if ($body) {
@@ -71,20 +90,20 @@ class EnvironmentBannerListener
 
         if (! empty($to)) {
             $toAddresses = array_map(fn ($address) => $address->getAddress(), $to);
-            $recipients[] = '<span style="text-decoration: underline">To</span>: '.implode(', ', $toAddresses);
+            $recipients[] = '<span style="text-decoration: underline">'.__('filament-mailbox::filament-mailbox.to').'</span>: '.implode(', ', $toAddresses);
         }
 
         if (! empty($cc)) {
             $ccAddresses = array_map(fn ($address) => $address->getAddress(), $cc);
-            $recipients[] = '<span style="text-decoration: underline">CC</span>: '.implode(', ', $ccAddresses);
+            $recipients[] = '<span style="text-decoration: underline">'.__('filament-mailbox::filament-mailbox.cc').'</span>: '.implode(', ', $ccAddresses);
         }
 
         if (! empty($bcc)) {
             $bccAddresses = array_map(fn ($address) => $address->getAddress(), $bcc);
-            $recipients[] = '<span style="text-decoration: underline">BCC</span>: '.implode(', ', $bccAddresses);
+            $recipients[] = '<span style="text-decoration: underline">'.__('filament-mailbox::filament-mailbox.bcc').'</span>: '.implode(', ', $bccAddresses);
         }
 
-        return ! empty($recipients) ? implode(' | ', $recipients) : 'No recipients found';
+        return ! empty($recipients) ? implode(' | ', $recipients) : __('filament-mailbox::filament-mailbox.banner.no_recipients');
     }
 
     private function formatOriginalRecipients(?array $to = null, ?array $cc = null, ?array $bcc = null): string
@@ -93,20 +112,20 @@ class EnvironmentBannerListener
 
         if (! empty($to)) {
             $toAddresses = array_map(fn ($address) => $address->getAddress(), $to);
-            $recipients[] = '<span style="text-decoration: underline">To</span>: '.implode(', ', $toAddresses);
+            $recipients[] = '<span style="text-decoration: underline">'.__('filament-mailbox::filament-mailbox.to').'</span>: '.implode(', ', $toAddresses);
         }
 
         if (! empty($cc)) {
             $ccAddresses = array_map(fn ($address) => $address->getAddress(), $cc);
-            $recipients[] = '<span style="text-decoration: underline">CC</span>: '.implode(', ', $ccAddresses);
+            $recipients[] = '<span style="text-decoration: underline">'.__('filament-mailbox::filament-mailbox.cc').'</span>: '.implode(', ', $ccAddresses);
         }
 
         if (! empty($bcc)) {
             $bccAddresses = array_map(fn ($address) => $address->getAddress(), $bcc);
-            $recipients[] = '<span style="text-decoration: underline">BCC</span>: '.implode(', ', $bccAddresses);
+            $recipients[] = '<span style="text-decoration: underline">'.__('filament-mailbox::filament-mailbox.bcc').'</span>: '.implode(', ', $bccAddresses);
         }
 
-        return ! empty($recipients) ? implode(' | ', $recipients) : 'No recipients found';
+        return ! empty($recipients) ? implode(' | ', $recipients) : __('filament-mailbox::filament-mailbox.banner.no_recipients');
     }
 
     private function normalizeEmail($email): ?string

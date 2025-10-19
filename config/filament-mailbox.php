@@ -69,4 +69,11 @@ return [
         'cache_ttl' => null,
     ],
 
+    // Tracking configuration (controls adding tracking pixels)
+    'tracking' => [
+        // When true, tracking pixels will be added to outgoing HTML emails.
+        // Can be set via environment variable MAIL_LOG_TRACKING_TURN_ON (true/false).
+        'turn_on' => env('MAIL_LOG_TRACKING_TURN_ON', true),
+    ],
+
 ];

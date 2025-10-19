@@ -16,6 +16,7 @@ class MailLogFactory extends Factory
             'to' => fake()->email(),
             'subject' => 'test email',
             'body' => fake()->paragraphs(3, asText: true),
+            'text_body' => fake()->paragraphs(1, asText: true),
         ];
     }
 }

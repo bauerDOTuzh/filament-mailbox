@@ -16,20 +16,15 @@ class TestCase extends Orchestra
         );
     }
 
-    // protected function getPackageProviders($app)
-    // {
-    //     return [
-    //         FilamentMailBoxServiceProvider::class,
-    //     ];
-    // }
 
     public function getEnvironmentSetUp($app)
     {
+        // Use in-memory sqlite for fast tests
         config()->set('database.default', 'testing');
-
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_filament-mailbox_table.php.stub';
-        $migration->up();
-        */
+        config()->set('database.connections.testing', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
     }
 }

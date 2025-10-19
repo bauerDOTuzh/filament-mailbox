@@ -2,15 +2,18 @@
 
 namespace Bauerdot\FilamentMailBox\Listeners;
 
-use Bauerdot\FilamentMailBox\Models\MailLog;
-use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
-use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Support\Str;
+use Symfony\Component\Mime\Email;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Part\DataPart;
+use Illuminate\Mail\Events\MessageSending;
+use Bauerdot\FilamentMailBox\Models\MailLog;
+use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
+use Bauerdot\FilamentMailBox\Listeners\MailLoggingListener;
+use Bauerdot\FilamentMailBox\Listeners\TrackingPixelListener;
+use Bauerdot\FilamentMailBox\Listeners\EnvironmentBannerListener;
 
 class MessageSendingListener
 {
@@ -30,5 +33,16 @@ class MessageSendingListener
             // Log and swallow, again don't break mail sending if logging fails
             Log::warning('MailLoggingListener failed: '.$e->getMessage(), ['exception' => $e]);
         }
+
+        try {
+            // Only add tracking pixel if enabled in config (default true)
+            if (config('filament-mailbox.tracking.turn_on', true)) {
+                (new TrackingPixelListener())->handle($event);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('TrackingPixelListener failed: '.$e->getMessage(), ['exception' => $e]);
+        }
+
+
     }
 }

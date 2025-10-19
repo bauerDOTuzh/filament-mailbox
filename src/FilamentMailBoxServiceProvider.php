@@ -2,8 +2,10 @@
 
 namespace Bauerdot\FilamentMailBox;
 
+use Bauerdot\FilamentMailBox\Listeners\MailSentListener;
 use Bauerdot\FilamentMailBox\Listeners\MessageSendingListener;
 use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Mail\Events\MessageSent;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -16,6 +18,7 @@ class FilamentMailBoxServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasTranslations()
+            ->hasRoute('web')
             ->hasMigration('create_filament_mail_log_table')
             ->hasMigration('create_mail_setting_table');
     }
@@ -27,5 +30,6 @@ class FilamentMailBoxServiceProvider extends PackageServiceProvider
         // to the focused listeners internally. We register only this one to avoid
         // duplicate handling (don't register the split listeners directly).
         $this->app['events']->listen(MessageSending::class, MessageSendingListener::class);
+        $this->app['events']->listen(MessageSent::class, MailSentListener::class);
     }
 }
