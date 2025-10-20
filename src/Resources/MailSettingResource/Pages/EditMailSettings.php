@@ -204,7 +204,7 @@ class EditMailSettings extends Page implements HasForms
                         ->email()
                         ->placeholder(__('filament-mailbox::filament-mailbox.placeholders.example_email')),
                 ])
-                    ->action(function (array $data): void {
+                ->action(function (array $data): void {
                     $dto = MailSettingsDto::fromConfigAndModel();
                     $authUser = Auth::user();
                     $authEmail = $authUser ? data_get($authUser, 'email') : null;

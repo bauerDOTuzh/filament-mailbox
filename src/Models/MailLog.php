@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
  * @property string|null $body
  * @property string|null $text_body
  * @property string|null $headers
- * @property array|null  $attachments
+ * @property array|null $attachments
  * @property string|null $message_id
  * @property \Bauerdot\FilamentMailBox\Enums\MailStatus|null $status
  * @property \Illuminate\Support\Carbon|null $sent_at
