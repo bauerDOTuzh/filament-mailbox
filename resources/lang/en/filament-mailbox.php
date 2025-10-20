@@ -36,6 +36,7 @@ return [
     'navigation.settings.sandbox_address' => 'Sandbox address',
     'navigation.settings.bcc_address' => 'BCC addresses',
     'navigation.settings.allowed_emails' => 'Allowed emails',
+    'navigation.settings.track_opens' => 'Track links',
     // Actions / modals
     'actions.send_test_email' => 'Send test email',
     'actions.send_test_email_heading' => 'Send test email',
@@ -62,10 +63,6 @@ return [
     'status.bounced' => 'Bounced',
     'status.complained' => 'Complained',
     'status.opened' => 'Opened',
-    'status.delivered' => 'Delivered',
-    'status.sent' => 'Sent',
-    'status.unsent' => 'Unsent',
-
     // Banner / preview
     'banner.test_email' => '⚠️ TEST EMAIL: :appName - :environment ⚠️',
     'banner.environment' => 'Environment:',

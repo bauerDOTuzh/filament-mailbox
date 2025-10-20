@@ -56,6 +56,22 @@ public function panel(Panel $panel): Panel
 }
 ```
 
+## Using env variables (fastest start/deterministic for envs)
+
+all emails can be types in example@example.com, example@example.com...
+
+MAILBOX_SHOW_ENV_BANNER=true //show banner on all emails
+MAILBOX_SANDBOX_MODE=true //if sandbox mode all emails are redirected to sandbox address
+MAILBOX_ALLOWED_EMAILS=example@example.com //which emails are allowed to be send out in sandbox mode
+MAILBOX_SANDBOX_ADDRESS=example@example.com //all emails are redirected to this address in sandbox mode
+MAILBOX_BCC_ADDRESS=example@example.com //bcc all outgoing emails
+
+
+And much more however it is encouraged to use them via config in admin panel.
+
+When you dont lock values in config and try to define it is encourages to run to clear temporary cahce
+`php artisan filament-mailbox:clear-mail-settings-cache`
+
 ## Testing
 
 ```bash

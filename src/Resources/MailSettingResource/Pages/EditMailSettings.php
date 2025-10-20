@@ -52,7 +52,7 @@ class EditMailSettings extends Page implements HasForms
 
         // Precompute values to avoid closures that might access component container early
         $transportState = $mailer['transport'] ?? 'unknown';
-        $connectionHint = $mailer['note'] ? __('Connection: :conn', ['conn' => $mailer['note']]) : null;
+        $connectionHint = $mailer['note'] ? __('filament-mailbox::filament-mailbox.banner.connection', ['conn' => $mailer['note']]) : null;
 
         $lockedShowEnvironmentBanner = $lock && array_key_exists('show_environment_banner', $defaults);
         $lockedSandboxMode = $lock && array_key_exists('sandbox_mode', $defaults);
@@ -70,11 +70,11 @@ class EditMailSettings extends Page implements HasForms
 
                 TextEntry::make('supports_stats')
                     ->label(__('filament-mailbox::filament-mailbox.navigation.settings.delivery_stats_supported'))
-                    ->state(MailSettingsDto::fromConfigAndModel()->supports_stats ? __('Yes') : __('No')),
+                    ->state(MailSettingsDto::fromConfigAndModel()->supports_stats ? __('filament-mailbox::filament-mailbox.yes') : __('filament-mailbox::filament-mailbox.no')),
 
-                TextEntry::make('track_clicks')
-                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.track_clicks'))
-                    ->state(MailSettingsDto::fromConfigAndModel()->tracking_on ? __('Yes') : __('No'))
+                TextEntry::make('track_opens')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.track_opens'))
+                    ->state(MailSettingsDto::fromConfigAndModel()->tracking_on ? __('filament-mailbox::filament-mailbox.yes') : __('filament-mailbox::filament-mailbox.no'))
                     ->hint(MailSettingsDto::fromConfigAndModel()->tracking_level),
 
                 Components\Toggle::make('show_environment_banner')

@@ -35,9 +35,20 @@ class MailSettingResource extends Resource
         return __('filament-mailbox::filament-mailbox.navigation.group');
     }
 
+    public static function getLabel(): string
+    {
+        return __('filament-mailbox::filament-mailbox.navigation.settings.label');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('filament-mailbox::filament-mailbox.navigation.settings.plural-label');
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'mail-setting';
+
 
     // The resource uses a custom Edit page which provides the form
     public static function getPages(): array
