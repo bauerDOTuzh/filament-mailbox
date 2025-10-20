@@ -8,7 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 /**
- * @property array $data
+ * @property array|null $data
+ * @property string|null $from
+ * @property string|null $to
+ * @property string|null $cc
+ * @property string|null $bcc
+ * @property string|null $subject
+ * @property string|null $body
+ * @property string|null $text_body
+ * @property string|null $headers
+ * @property array|null  $attachments
+ * @property string|null $message_id
+ * @property \Bauerdot\FilamentMailBox\Enums\MailStatus|null $status
+ * @property \Illuminate\Support\Carbon|null $sent_at
+ * @property \Illuminate\Support\Carbon|null $delivered_at
+ * @property \Illuminate\Support\Carbon|null $opened_at
+ * @property \Illuminate\Support\Carbon|null $bounced_at
+ * @property \Illuminate\Support\Carbon|null $complained_at
  */
 class MailLog extends Model
 {
@@ -136,7 +152,10 @@ class MailLog extends Model
 
         $current = $this->status ?? MailStatus::UNSENT;
 
-        $currentPriority = $priority[$current->value] ?? 0;
+        $currentPriority = 0;
+        if ($current instanceof MailStatus) {
+            $currentPriority = $priority[$current->value] ?? 0;
+        }
         $newPriority = $priority[$status->value] ?? 0;
 
         if ($newPriority >= $currentPriority) {

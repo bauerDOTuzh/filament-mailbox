@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
+/**
+ * @property string $key
+ * @property string $value
+ * @property string|null $type
+ */
 class MailSetting extends Model
 {
     use HasFactory;

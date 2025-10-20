@@ -4,6 +4,7 @@ namespace Bauerdot\FilamentMailBox\Listeners;
 
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Str;
+use Symfony\Component\Mime\Email;
 
 class TrackingPixelListener
 {
@@ -22,7 +23,7 @@ class TrackingPixelListener
         }
 
         // Only touch HTML emails; leave text-only untouched (simple path)
-        $html = method_exists($message, 'getHtmlBody') ? $message->getHtmlBody() : null;
+        $html = $message instanceof Email ? $message->getHtmlBody() : null;
         if (! $html) {
             return;
         }

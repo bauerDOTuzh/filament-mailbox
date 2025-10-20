@@ -42,22 +42,22 @@ return [
                 if (is_null($v) || $v === '') {
                     return [];
                 }
-                if (is_array($v)) {
-                    return $v;
+                if (is_string($v)) {
+                    return array_values(array_filter(array_map('trim', explode(',', $v))));
                 }
 
-                return array_values(array_filter(array_map('trim', explode(',', (string) $v))));
+                return [];
             })(),
             'allowed_emails' => (function () {
                 $v = env('MAIL_LOG_ALLOWED_EMAILS', null);
                 if (is_null($v) || $v === '') {
                     return [];
                 }
-                if (is_array($v)) {
-                    return $v;
+                if (is_string($v)) {
+                    return array_values(array_filter(array_map('trim', explode(',', $v))));
                 }
 
-                return array_values(array_filter(array_map('trim', explode(',', (string) $v))));
+                return [];
             })(),
         ],
 

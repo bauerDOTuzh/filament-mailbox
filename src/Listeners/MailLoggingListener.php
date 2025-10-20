@@ -61,12 +61,9 @@ class MailLoggingListener
     {
         $bccAddresses = $settings->bcc_address ?? [];
 
+        // Ensure it's a simple array of emails
         if (! is_array($bccAddresses)) {
-            if (is_string($bccAddresses) && trim($bccAddresses) !== '') {
-                $bccAddresses = [$this->normalizeEmail($bccAddresses)];
-            } else {
-                $bccAddresses = [];
-            }
+            $bccAddresses = [];
         }
 
         $message->bcc(...$bccAddresses);
@@ -74,8 +71,8 @@ class MailLoggingListener
 
     private function applySandboxRedirection($message, string $environment, MailSettingsDto $settings): void
     {
-        $allowedEmails = is_array($settings->allowed_emails) ? $settings->allowed_emails : [];
-        $sandboxAddress = $this->normalizeEmail($settings->sandbox_address);
+        $allowedEmails = $settings->allowed_emails ?? [];
+        $sandboxAddress = $this->normalizeEmail($settings->sandbox_address ?? null);
 
         $originalTo = $message->getTo() ?: [];
         $originalCc = $message->getCc() ?: [];
@@ -91,8 +88,8 @@ class MailLoggingListener
         $filteredBcc = $this->filterRecipients($originalBcc, $allowedEmails);
 
         $hasBlockedRecipients = count($filteredTo) < count($originalTo) ||
-                               count($filteredCc) < count($originalCc) ||
-                               count($filteredBcc) < count($originalBcc);
+                       count($filteredCc) < count($originalCc) ||
+                       count($filteredBcc) < count($originalBcc);
 
         if ($hasBlockedRecipients && $sandboxAddress !== null) {
             $filteredTo[] = $sandboxAddress;
