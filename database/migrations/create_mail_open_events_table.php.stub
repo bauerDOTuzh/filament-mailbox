@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('mail_open_events', function (Blueprint $t) {
+            $t->id();
+            // reference the integer `id` on `mail_logs` (created with increments)
+            $t->unsignedInteger('maillog_id')->index();
+            $t->foreign('maillog_id')
+                ->references('id')
+                ->on('mail_logs')
+                ->onDelete('cascade');
+            $t->string('ip', 45)->nullable()->index();
+            $t->string('user_agent', 512)->nullable();
+            $t->json('headers')->nullable();
+            $t->timestamp('opened_at')->index();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('mail_open_events');
+    }
+};

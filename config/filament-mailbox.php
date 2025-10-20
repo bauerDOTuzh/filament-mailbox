@@ -71,9 +71,24 @@ return [
 
     // Tracking configuration (controls adding tracking pixels)
     'tracking' => [
-        // When true, tracking pixels will be added to outgoing HTML emails.
-        // Can be set via environment variable MAIL_LOG_TRACKING_TURN_ON (true/false).
+        // Global enable/disable for tracking pixels
         'turn_on' => env('MAIL_LOG_TRACKING_TURN_ON', true),
+
+        // Level decides where granular tracking is stored:
+        // - 'clicks' => increments counters on mail_logs (opens_count)
+        // - 'logs' => stores per-open/per-click rows in a separate table (mail_open_events)
+        // Default is 'logs' (more detailed)
+        'level' => env('MAIL_LOG_TRACKING_LEVEL', 'logs'),
+
+        // Options for 'logs' level: granular open event storage
+        'logs' => [
+            'enabled' => env('MAIL_LOG_TRACKING_LOGS_ENABLED', true),
+            'store_ip' => env('MAIL_LOG_TRACKING_LOGS_STORE_IP', true),
+            'store_user_agent' => env('MAIL_LOG_TRACKING_LOGS_STORE_UA', true),
+            'store_headers' => env('MAIL_LOG_TRACKING_LOGS_STORE_HEADERS', false),
+            'dedupe_seconds' => (int) env('MAIL_LOG_TRACKING_LOGS_DEDUPE_SECONDS', 60),
+            'retention_days' => (int) env('MAIL_LOG_TRACKING_LOGS_RETENTION_DAYS', 180),
+        ],
     ],
 
 ];

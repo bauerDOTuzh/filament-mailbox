@@ -15,7 +15,7 @@ class TrackingPixelListener
         // If, for any reason, it's missing, mint one so the pixel still works.
         $headers = $message->getHeaders();
         $header = $headers->get('unique-id');
-        $messageId = $header ? $header->getBodyAsString() : (string) Str::uuid();
+        $messageId = $header ? $header->getBodyAsString() : (string) Str::ulid();
 
         if (! $header) {
             $headers->addTextHeader('unique-id', $messageId);

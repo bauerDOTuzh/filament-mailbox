@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Mime\Email as SymfonyEmail;
 
 beforeEach(function () {
-    $migration = include __DIR__ . '/../../database/migrations/create_filament_mail_log_table.php.stub';
+    $migration = include __DIR__ . '/../../database/migrations/create_mail_log_table.php.stub';
     $migration->up();
     $migration2 = include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
     $migration2->up();
@@ -22,7 +22,7 @@ it('does not allow mass-assigning status via create', function () {
         'subject' => 'mass assign test',
         'body' => 'x',
         'text_body' => '',
-        'message_id' => (string) Str::uuid(),
+        'message_id' => (string) Str::ulid(),
         'status' => 'bounced',
     ];
 

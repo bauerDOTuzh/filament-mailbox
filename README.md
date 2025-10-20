@@ -81,3 +81,8 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+
+Next steps
+1) Add database periodic cleanups (of bodies etc.)
+3) add proper testing for bcc 

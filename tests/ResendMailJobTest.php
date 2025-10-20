@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
     // Ensure mail_logs table exists for the factory
-    $migration = include __DIR__ . '/../database/migrations/create_filament_mail_log_table.php.stub';
+    $migration = include __DIR__ . '/../database/migrations/create_mail_log_table.php.stub';
     $migration->up();
 });
 

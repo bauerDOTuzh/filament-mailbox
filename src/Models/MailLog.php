@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class MailLog extends Model
 {
     use HasFactory;
-
+    
     // Allow mass assignment for common mail log fields. Using fillable is
     // safer than unguarded when publishing a package.
     protected $fillable = [

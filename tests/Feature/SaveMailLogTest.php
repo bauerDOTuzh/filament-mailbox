@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
     // Run the mail_logs migration (the package provides a stub)
-    $migration = include __DIR__ . '/../../database/migrations/create_filament_mail_log_table.php.stub';
+    $migration = include __DIR__ . '/../../database/migrations/create_mail_log_table.php.stub';
     $migration->up();
 
     // Also ensure mail_settings table exists for MailSettingsDto to read
@@ -52,7 +52,7 @@ it('respects status precedence when marking', function () {
         'subject' => 'precedence test',
         'body' => 'x',
         'text_body' => '',
-        'message_id' => (string) Str::uuid(),
+        'message_id' => (string) Str::ulid(),
     ]);
 
     $log->markSent();

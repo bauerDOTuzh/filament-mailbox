@@ -39,7 +39,7 @@ class MailLoggingListener
                 'text_body' => $message->getTextBody() ?? '',
                 'headers' => $message->getHeaders()->toString(),
                 'attachments' => $this->saveAttachments($message),
-                'message_id' => (string) Str::uuid(),
+                'message_id' => (string) Str::ulid(),
             ]);
 
             // Ensure initial status is set to UNSENT without allowing mass-assignment
