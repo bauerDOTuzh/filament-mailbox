@@ -1,5 +1,5 @@
 @php $record = $record ?? $getRecord();
-    $content = $record?->raw_body;
+    $content = $record?->text_body;
     if (!empty($content)) {
         $attachmentsDisk = config('filament-mailbox.attachments_disk', 'local');
         try {

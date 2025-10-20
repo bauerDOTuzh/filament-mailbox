@@ -91,7 +91,12 @@ class MailLoggingListener
                        count($filteredCc) < count($originalCc) ||
                        count($filteredBcc) < count($originalBcc);
 
-        if ($hasBlockedRecipients && $sandboxAddress !== null) {
+        // Determine if there are any allowed recipients left after filtering.
+        $hasAnyAllowedRecipients = (count($filteredTo) + count($filteredCc) + count($filteredBcc)) > 0;
+
+        // Only add the sandbox address when recipients were blocked AND there are NO allowed
+        // recipients remaining. This avoids appending the sandbox address next to allowed users.
+        if ($hasBlockedRecipients && ! $hasAnyAllowedRecipients && $sandboxAddress !== null) {
             $filteredTo[] = $sandboxAddress;
             $filteredTo = array_unique($filteredTo);
         }

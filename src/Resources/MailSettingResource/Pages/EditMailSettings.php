@@ -52,9 +52,7 @@ class EditMailSettings extends Page implements HasForms
 
         // Precompute values to avoid closures that might access component container early
         $transportState = $mailer['transport'] ?? 'unknown';
-        $connectionHint = $mailer['connection'] ? __('Connection: :conn', ['conn' => $mailer['connection']]) : null;
-        $remoteIpState = $mailer['remote_ip'] ?? __('Unknown');
-        $noteHint = $mailer['note'] ?? null;
+        $connectionHint = $mailer['note'] ? __('Connection: :conn', ['conn' => $mailer['note']]) : null;
 
         $lockedShowEnvironmentBanner = $lock && array_key_exists('show_environment_banner', $defaults);
         $lockedSandboxMode = $lock && array_key_exists('sandbox_mode', $defaults);
@@ -66,32 +64,33 @@ class EditMailSettings extends Page implements HasForms
             ->schema([
                 // Read-only mailer / connection info (use Placeholder for pure display)
                 TextEntry::make('mail_transport')
-                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.current_mail_transport') ?? 'Current mail transport')
-                    // ->content($transportState)
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.current_mail_transport'))
                     ->state($transportState)
                     ->hint($connectionHint),
 
-                TextEntry::make('mail_remote_ip')
-                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.current_mail_remote_ip') ?? 'Remote IP')
-                    ->state($remoteIpState)
-                    ->hint($noteHint),
-
                 TextEntry::make('supports_stats')
-                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.delivery_stats_supported') ?? 'Delivery stats supported')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.delivery_stats_supported'))
                     ->state(MailSettingsDto::fromConfigAndModel()->supports_stats ? __('Yes') : __('No')),
 
+                TextEntry::make('track_clicks')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.track_clicks'))
+                    ->state(MailSettingsDto::fromConfigAndModel()->tracking_on ? __('Yes') : __('No'))
+                    ->hint(MailSettingsDto::fromConfigAndModel()->tracking_level),
+
+
+
                 Components\Toggle::make('show_environment_banner')
-                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.show_environment_banner') ?? 'Show environment banner')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.show_environment_banner'))
                     ->disabled($lockedShowEnvironmentBanner)
                     ->hint($lockedShowEnvironmentBanner ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : null),
 
                 Components\Toggle::make('sandbox_mode')
-                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.sandbox_mode') ?? 'Sandbox mode')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.sandbox_mode'))
                     ->disabled($lockedSandboxMode)
                     ->hint($lockedSandboxMode ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : null),
 
                 Components\TextInput::make('sandbox_address')
-                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.sandbox_address') ?? 'Sandbox address')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.sandbox_address'))
                     ->email()
                     ->placeholder(__('filament-mailbox::filament-mailbox.placeholders.example_email'))
                     ->columnSpanFull()
@@ -99,13 +98,13 @@ class EditMailSettings extends Page implements HasForms
                     ->hint($lockedSandboxAddress ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : null),
 
                 Components\TagsInput::make('bcc_address')
-                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.bcc_address') ?? 'BCC addresses')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.bcc_address'))
                     ->placeholder(__('filament-mailbox::filament-mailbox.placeholders.example_email'))
                     ->disabled($lockedBccAddress)
                     ->hint($lockedBccAddress ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : __('filament-mailbox::filament-mailbox.hints.bcc_help')),
 
                 Components\TagsInput::make('allowed_emails')
-                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.allowed_emails') ?? 'Allowed emails')
+                    ->label(__('filament-mailbox::filament-mailbox.navigation.settings.allowed_emails'))
                     ->placeholder(__('filament-mailbox::filament-mailbox.placeholders.example_email'))
                     ->disabled($lockedAllowedEmails)
                     ->hint($lockedAllowedEmails ? __('filament-mailbox::filament-mailbox.hints.locked_in_config') : __('filament-mailbox::filament-mailbox.hints.allowed_help')),
@@ -127,25 +126,20 @@ class EditMailSettings extends Page implements HasForms
             $transport = $mailer['transport'] ?? $mailerName ?? 'unknown';
 
             $connection = null;
-            $remoteIp = null;
             $note = null;
 
             if ($transport === 'smtp' || $transport === 'smtp+tls' || $transport === 'smtp+ssl') {
                 $host = $mailer['host'] ?? null;
                 $port = $mailer['port'] ?? null;
                 if ($host) {
-                    $connection = $host.($port ? ":{$port}" : '');
-                    // best-effort DNS resolution (no network side-effects beyond DNS)
-                    $resolved = @gethostbyname($host);
-                    if ($resolved && $resolved !== $host) {
-                        $remoteIp = $resolved;
-                    }
+                    $note = $host.($port ? ":{$port}" : '');
                 }
+
             } elseif ($transport === 'log') {
                 // show log channel if configured
                 $channel = $mailer['channel'] ?? config('logging.channels.mail') ?? config('logging.default');
-                $connection = 'log'.($channel ? " (channel: {$channel})" : '');
-                $note = __('filament-mailbox::filament-mailbox.hints.using_log_transport');
+                $note = 'log'.($channel ? " (channel: {$channel})" : '');
+                $note .= __('filament-mailbox::filament-mailbox.hints.using_log_transport');
             } else {
                 // generic fallback: display mailer config summary
                 if (! empty($mailer)) {
@@ -155,21 +149,17 @@ class EditMailSettings extends Page implements HasForms
                             $connectionParts[] = "{$k}=".$mailer[$k];
                         }
                     }
-                    $connection = $connectionParts ? implode(', ', $connectionParts) : null;
+                    $note = $connectionParts ? implode(', ', $connectionParts) : null;
                 }
             }
 
             return [
                 'transport' => $transport,
-                'connection' => $connection,
-                'remote_ip' => $remoteIp,
                 'note' => $note,
             ];
         } catch (\Throwable $e) {
             return [
                 'transport' => 'unknown',
-                'connection' => null,
-                'remote_ip' => null,
                 'note' => null,
             ];
         }

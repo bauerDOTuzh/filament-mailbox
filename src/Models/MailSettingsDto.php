@@ -4,6 +4,7 @@ namespace Bauerdot\FilamentMailBox\Models;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Bauerdot\FilamentMailBox\Models\MailSetting;
 
 /**
  * Simple DTO for typed mail settings access.
@@ -20,6 +21,10 @@ final class MailSettingsDto
 
     public array $allowed_emails;
 
+    public bool $tracking_on;
+
+    public string $tracking_level;
+
     /**
      * Whether the current mailer supports delivery statistics (open/click/etc).
      */
@@ -33,6 +38,8 @@ final class MailSettingsDto
         $this->bcc_address = $this->normalizeEmailList($data['bcc_address'] ?? []);
         $this->allowed_emails = $this->normalizeEmailList($data['allowed_emails'] ?? []);
         $this->supports_stats = (bool) ($data['supports_stats'] ?? true);
+        $this->tracking_on = config('filament-mailbox.tracking.turn_on', true);
+        $this->tracking_level = config('filament-mailbox.tracking.level', true);
     }
 
     private function normalizeEmailList($value): array
@@ -68,29 +75,21 @@ final class MailSettingsDto
         $cacheKey = self::cacheKey();
         $ttl = Config::get('filament-mailbox.mail_settings.cache_ttl', null);
 
-        // if ($useCache && Cache::has($cacheKey)) {
-        //     $cached = Cache::get($cacheKey);
-        //     // Ensure cached item is a fully-initialized DTO. Older cached objects (or arrays)
-        //     // could lead to uninitialized typed properties. Use reflection to verify.
-        //     if ($cached instanceof self) {
-        //         try {
-        //             $rp = new \ReflectionProperty(self::class, 'supports_stats');
-        //             if ($rp->isInitialized($cached)) {
-        //                 return $cached;
-        //             }
-        //         } catch (\ReflectionException $e) {
-        //             // If reflection fails for any reason, ignore and rebuild below.
-        //         }
-        //     }
-        //     // If cache contained something else (array, older object), fall through to rebuild.
-        // }
+        // We cache the merged settings array instead of the DTO instance. Caching the
+        // raw array avoids issues with serializing objects that have uninitialized
+        // typed properties. Rebuild the DTO from the array on each read.
+        if ($useCache && Cache::has($cacheKey)) {
+            $merged = Cache::get($cacheKey, []);
+        } else {
+            $defaults = Config::get('filament-mailbox.mail_settings.defaults', []);
 
-        $defaults = Config::get('filament-mailbox.mail_settings.defaults', []);
+            // Pull db values (MailSetting::allCached will merge defaults and populate per-key cache)
+            $rows = MailSetting::allCached();
 
-        // Pull db values (MailSetting::allCached will merge defaults)
-        $rows = MailSetting::allCached();
+            $merged = array_merge($defaults, $rows);
 
-        $merged = array_merge($defaults, $rows);
+            Cache::put($cacheKey, $merged, $ttl);
+        }
 
         $dto = new self($merged);
 
@@ -100,13 +99,7 @@ final class MailSettingsDto
         $driver = is_string($mailer) ? strtolower($mailer) : null;
 
         // For certain drivers (e.g. smtp or log) we do not have meaningful delivery stats
-        if (in_array($driver, ['smtp', 'log'], true)) {
-            $dto->supports_stats = false;
-        } else {
-            $dto->supports_stats = true;
-        }
-
-        // Cache::put($cacheKey, $dto, $ttl);
+        $dto->supports_stats = ! in_array($driver, ['smtp', 'log'], true);
 
         return $dto;
     }

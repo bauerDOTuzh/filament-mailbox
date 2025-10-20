@@ -89,6 +89,12 @@ return [
             'dedupe_seconds' => (int) env('MAIL_LOG_TRACKING_LOGS_DEDUPE_SECONDS', 60),
             'retention_days' => (int) env('MAIL_LOG_TRACKING_LOGS_RETENTION_DAYS', 180),
         ],
+
+        // Per-pixel throttle configuration to avoid abuse (DDoS) of the tracking pixel
+        // Format: "<maxAttempts>,<decayMinutes>" (same as Laravel throttle middleware)
+        // Example: '30,1' = 30 requests per 1 minute
+        'pixel_throttle_enabled' => env('MAIL_LOG_PIXEL_THROTTLE_ENABLED', true),
+        'pixel_throttle' => env('MAIL_LOG_PIXEL_THROTTLE', '30,1'),
     ],
 
 ];

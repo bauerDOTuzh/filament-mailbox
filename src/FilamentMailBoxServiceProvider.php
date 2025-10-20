@@ -19,7 +19,8 @@ class FilamentMailBoxServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasTranslations()
             ->hasRoute('web')
-            ->hasMigration('create_filament_mail_log_table')
+            ->hasMigration('create_mail_log_table')
+            ->hasMigration('create_mail_open_events_table')
             ->hasMigration('create_mail_setting_table');
     }
 
@@ -31,5 +32,11 @@ class FilamentMailBoxServiceProvider extends PackageServiceProvider
         // duplicate handling (don't register the split listeners directly).
         $this->app['events']->listen(MessageSending::class, MessageSendingListener::class);
         $this->app['events']->listen(MessageSent::class, MailSentListener::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Bauerdot\FilamentMailBox\Console\ClearMailSettingsCache::class,
+            ]);
+        }
     }
 }

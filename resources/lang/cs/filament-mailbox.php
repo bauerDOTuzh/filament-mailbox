@@ -31,10 +31,12 @@ return [
     'navigation.settings.current_mail_transport' => 'Aktuální mailový transport',
     'navigation.settings.current_mail_remote_ip' => 'Vzdálená IP',
     'navigation.settings.show_environment_banner' => 'Zobrazit banner prostředí',
-    'navigation.settings.sandbox_mode' => 'Režim pískoviště (sandbox)',
+    'navigation.settings.sandbox_mode' => 'Režim sandbox',
     'navigation.settings.sandbox_address' => 'Adresa sandboxu',
     'navigation.settings.bcc_address' => 'BCC adresy',
     'navigation.settings.allowed_emails' => 'Povolené e-maily',
+    'navigation.settings.delivery_stats_supported' => 'Podporováno statistiky e-mailu',
+    'navigation.settings.delivery_stats_supported' => 'Podporováno statistiky e-mailu',
     // Actions / modals
     'actions.send_test_email' => 'Odeslat testovací e-mail',
     'actions.send_test_email_heading' => 'Odeslat testovací e-mail',
