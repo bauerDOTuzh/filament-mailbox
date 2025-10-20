@@ -1,15 +1,15 @@
 <?php
 
 use Bauerdot\FilamentMailBox\Listeners\MailLoggingListener;
+use Bauerdot\FilamentMailBox\Models\MailLog;
 use Illuminate\Mail\Events\MessageSending;
 use Symfony\Component\Mime\Email as SymfonyEmail;
-use Bauerdot\FilamentMailBox\Models\MailLog;
 
 beforeEach(function () {
     // Ensure mail_logs table exists
-    $migration = include __DIR__ . '/../../database/migrations/create_mail_log_table.php.stub';
+    $migration = include __DIR__.'/../../database/migrations/create_mail_log_table.php.stub';
     $migration->up();
-    $m2 = include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
+    $m2 = include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
     $m2->up();
 });
 
@@ -20,12 +20,12 @@ it('applies global bcc from config when provided as string or array', function (
 
     \Bauerdot\FilamentMailBox\Models\MailSettingsDto::flushCache();
 
-    $email = new SymfonyEmail();
+    $email = new SymfonyEmail;
     $email->from('from@example.com');
     $email->to('to@example.com');
     $email->subject('Test');
 
-    $listener = new MailLoggingListener();
+    $listener = new MailLoggingListener;
     $listener->handle(new MessageSending($email));
 
     // Message should have BCC header set
@@ -48,13 +48,13 @@ it('redirects recipients to sandbox address and prefixes subject when recipients
 
     \Bauerdot\FilamentMailBox\Models\MailSettingsDto::flushCache();
 
-    $email = new SymfonyEmail();
+    $email = new SymfonyEmail;
     $email->from('from@example.com');
     $email->to('blocked@example.com');
     $email->subject('Original Subject');
     $email->text('text');
 
-    $listener = new MailLoggingListener();
+    $listener = new MailLoggingListener;
     $listener->handle(new MessageSending($email));
 
     // X-Original-To header should be present
@@ -63,7 +63,7 @@ it('redirects recipients to sandbox address and prefixes subject when recipients
     expect($orig)->not->toBeNull();
 
     // Recipient should be sandbox address
-    $tos = array_map(fn($a) => $a->getAddress(), $email->getTo());
+    $tos = array_map(fn ($a) => $a->getAddress(), $email->getTo());
     expect(in_array('sandbox@example.com', $tos))->toBeTrue();
 
     // Subject should be prefixed with environment indicator

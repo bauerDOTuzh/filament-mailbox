@@ -15,7 +15,7 @@ class MailLogEventHandler
     {
         try {
             // Delegate to the new MailLoggingListener which implements the logging logic.
-            (new MailLoggingListener())->handle($event);
+            (new MailLoggingListener)->handle($event);
         } catch (\Throwable $e) {
             Log::warning('MailLogEventHandler failed while handling MessageSending: '.$e->getMessage(), [
                 'exception' => $e,

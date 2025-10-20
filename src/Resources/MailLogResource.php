@@ -2,25 +2,24 @@
 
 namespace Bauerdot\FilamentMailBox\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Infolists;
-use Filament\Tables\Table;
-use Filament\Schemas\Schema;
-use Filament\Actions\ViewAction;
-use Filament\Resources\Resource;
-use Filament\Tables\Filters\Filter;
-use Filament\Schemas\Components\Tabs;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
 use Bauerdot\FilamentMailBox\Models\MailLog;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\ViewEntry;
 use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 use Bauerdot\FilamentMailBox\Resources\MailLogResource\Pages;
 use Bauerdot\FilamentMailBox\Resources\MailLogResource\Widgets\MailStatsWidget;
+use Filament\Actions\ViewAction;
+use Filament\Forms;
+use Filament\Infolists;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ViewEntry;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MailLogResource extends Resource
 {
@@ -125,7 +124,7 @@ class MailLogResource extends Resource
                 ]),
         ];
 
-        $base[] = Tabs::make("tabs")
+        $base[] = Tabs::make('tabs')
             ->tabs($tabs)
             ->columnSpanFull();
 
@@ -138,7 +137,7 @@ class MailLogResource extends Resource
 
         $columns = [
             TextColumn::make('status')
-                ->badge()   
+                ->badge()
                 ->label(trans('filament-mailbox::filament-mailbox.column.status')),
             Tables\Columns\TextColumn::make('subject')
                 ->label(trans('filament-mailbox::filament-mailbox.column.subject'))
@@ -148,6 +147,7 @@ class MailLogResource extends Resource
                     if (strlen($state) <= $column->getCharacterLimit()) {
                         return null;
                     }
+
                     return $state;
                 })
                 ->searchable()
@@ -169,7 +169,7 @@ class MailLogResource extends Resource
             ->defaultSort(config('filament-mailbox.sort.column', 'created_at'), config('filament-mailbox.sort.direction', 'desc'))
             ->columns($columns)
             ->filters([
-               Filter::make('created_at')
+                Filter::make('created_at')
                     ->schema([
                         Forms\Components\DatePicker::make('created_from'),
                         Forms\Components\DatePicker::make('created_until'),
@@ -207,7 +207,7 @@ class MailLogResource extends Resource
         ];
     }
 
-     public static function getWidgets(): array
+    public static function getWidgets(): array
     {
         return [MailStatsWidget::class];
     }

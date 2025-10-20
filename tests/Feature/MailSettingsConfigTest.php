@@ -4,7 +4,7 @@ use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 
 it('parses bcc and allowed_emails from defaults and validates addresses', function () {
     // Ensure mail_settings table exists (MailSettingsDto pulls MailSetting::allCached())
-    $m = include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
+    $m = include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
     $m->up();
 
     config()->set('filament-mailbox.mail_settings.defaults', [
@@ -24,7 +24,7 @@ it('parses bcc and allowed_emails from defaults and validates addresses', functi
 });
 
 it('sets supports_stats false for smtp or log mail drivers', function () {
-    $m = include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
+    $m = include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
     $m->up();
 
     config()->set('mail.default', 'smtp');

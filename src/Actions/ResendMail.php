@@ -9,12 +9,6 @@ class ResendMail
 {
     /**
      * Resend the given MailLog entry to the provided recipients.
-     *
-     * @param MailLog $mailLog
-     * @param array $to
-     * @param array $cc
-    * @param array $bcc
-    * @param bool $includeAttachments
      */
     public function handle(MailLog $mailLog, array $to = [], array $cc = [], array $bcc = [], bool $includeAttachments = false): void
     {

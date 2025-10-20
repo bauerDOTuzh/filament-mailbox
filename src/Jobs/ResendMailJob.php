@@ -2,22 +2,26 @@
 
 namespace Bauerdot\FilamentMailBox\Jobs;
 
+use Bauerdot\FilamentMailBox\Models\MailLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
-use Bauerdot\FilamentMailBox\Models\MailLog;
 
 class ResendMailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $mailLog;
+
     public $to;
+
     public $cc;
+
     public $bcc;
+
     public $includeAttachments = false;
 
     /**
@@ -44,7 +48,7 @@ class ResendMailJob implements ShouldQueue
         $mailer = $this->mailLog->mailer ?? config('mail.default');
 
         Mail::mailer($mailer)->send('filament-mailbox::raw-html', ['content' => $this->mailLog->body], function ($message) {
-            if (!empty($this->mailLog->from) && is_array($this->mailLog->from)) {
+            if (! empty($this->mailLog->from) && is_array($this->mailLog->from)) {
                 $from = array_key_first($this->mailLog->from);
                 $name = $this->mailLog->from[$from];
                 $message->from($from, $name);

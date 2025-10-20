@@ -2,15 +2,15 @@
 
 namespace Bauerdot\FilamentMailBox\Resources\MailLogResource\Actions;
 
+use Bauerdot\FilamentMailBox\Actions\ResendMail;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\CanCustomizeProcess;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Placeholder;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\IconSize;
 use Illuminate\Support\Facades\Log;
-use Bauerdot\FilamentMailBox\Actions\ResendMail;
 
 class ResendMailAction extends Action
 {
@@ -20,8 +20,6 @@ class ResendMailAction extends Action
     {
         return 'resend_mail_action';
     }
-
-
 
     protected function setUp(): void
     {
@@ -70,7 +68,7 @@ class ResendMailAction extends Action
                     $bcc = $data['bcc'] ?? [];
                     $includeAttachments = $data['attachments'] ?? false;
 
-                    (new ResendMail())->handle($record, $to, $cc, $bcc, $includeAttachments);
+                    (new ResendMail)->handle($record, $to, $cc, $bcc, $includeAttachments);
 
                     Notification::make()
                         ->title(__('filament-mailbox::filament-mailbox.resend_email_success'))

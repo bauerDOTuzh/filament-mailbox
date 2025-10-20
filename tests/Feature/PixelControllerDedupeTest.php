@@ -6,15 +6,15 @@ use Bauerdot\FilamentMailBox\Models\MailOpenEvent;
 
 beforeEach(function () {
     // Ensure required tables exist
-    include __DIR__ . '/../../database/migrations/create_mail_log_table.php.stub';
-    include __DIR__ . '/../../database/migrations/create_mail_open_events_table.php.stub';
-    include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
+    include __DIR__.'/../../database/migrations/create_mail_log_table.php.stub';
+    include __DIR__.'/../../database/migrations/create_mail_open_events_table.php.stub';
+    include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
 
-    $m1 = include __DIR__ . '/../../database/migrations/create_mail_log_table.php.stub';
+    $m1 = include __DIR__.'/../../database/migrations/create_mail_log_table.php.stub';
     $m1->up();
-    $m2 = include __DIR__ . '/../../database/migrations/create_mail_open_events_table.php.stub';
+    $m2 = include __DIR__.'/../../database/migrations/create_mail_open_events_table.php.stub';
     $m2->up();
-    $m3 = include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
+    $m3 = include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
     $m3->up();
 
     // route used by TrackingPixelListener
@@ -38,7 +38,7 @@ it('dedupes quick repeated opens according to dedupe_seconds', function () {
     config()->set('filament-mailbox.tracking.logs.enabled', true);
     config()->set('filament-mailbox.tracking.logs.dedupe_seconds', 60);
 
-    $controller = new PixelController();
+    $controller = new PixelController;
 
     $req1 = Illuminate\Http\Request::create('/filament-mailbox/pixel/dedupe-id', 'GET', [], [], [], ['REMOTE_ADDR' => '1.2.3.4']);
     $req1->headers->set('User-Agent', 'UA1');
@@ -70,7 +70,7 @@ it('respects store_ip and store_user_agent flags when saving events', function (
     config()->set('filament-mailbox.tracking.logs.store_ip', false);
     config()->set('filament-mailbox.tracking.logs.store_user_agent', false);
 
-    $controller = new PixelController();
+    $controller = new PixelController;
 
     $req = Illuminate\Http\Request::create('/filament-mailbox/pixel/store-id', 'GET', [], [], [], ['REMOTE_ADDR' => '9.9.9.9']);
     $req->headers->set('User-Agent', 'UA2');
@@ -96,7 +96,7 @@ it('increments opens_count when tracking.level is clicks', function () {
     config()->set('filament-mailbox.tracking.turn_on', true);
     config()->set('filament-mailbox.tracking.level', 'clicks');
 
-    $controller = new PixelController();
+    $controller = new PixelController;
 
     $req = Illuminate\Http\Request::create('/filament-mailbox/pixel/clicks-id', 'GET', [], [], [], ['REMOTE_ADDR' => '4.4.4.4']);
     $controller->show($req, 'clicks-id');

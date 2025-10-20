@@ -2,15 +2,15 @@
 
 namespace Bauerdot\FilamentMailBox\Listeners;
 
-use Illuminate\Mail\Events\MessageSent;
 use Bauerdot\FilamentMailBox\Models\MailLog;
+use Illuminate\Mail\Events\MessageSent;
 
 class MailSentListener
 {
     public function handle(MessageSent $event): void
     {
-        $headers   = $event->message->getHeaders();
-        $unique    = $headers->get('unique-id');
+        $headers = $event->message->getHeaders();
+        $unique = $headers->get('unique-id');
         $messageId = $unique ? $unique->getBodyAsString() : null;
 
         if (! $messageId) {

@@ -15,5 +15,4 @@ class ViewMailLog extends ViewRecord
             \Bauerdot\FilamentMailBox\Resources\MailLogResource\Actions\ResendMailAction::make(),
         ];
     }
-
 }

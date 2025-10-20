@@ -2,19 +2,19 @@
 
 namespace Bauerdot\FilamentMailBox\Resources\MailSettingResource\Pages;
 
-use Filament\Actions\Action;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components;
-use Filament\Resources\Pages\Page;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Notifications\Notification;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Forms\Concerns\InteractsWithForms;
 use Bauerdot\FilamentMailBox\Models\MailSetting;
 use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 use Bauerdot\FilamentMailBox\Resources\MailSettingResource;
+use Filament\Actions\Action;
+use Filament\Forms\Components;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\Page;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class EditMailSettings extends Page implements HasForms
 {
@@ -134,7 +134,7 @@ class EditMailSettings extends Page implements HasForms
                 $host = $mailer['host'] ?? null;
                 $port = $mailer['port'] ?? null;
                 if ($host) {
-                    $connection = $host . ($port ? ":{$port}" : '');
+                    $connection = $host.($port ? ":{$port}" : '');
                     // best-effort DNS resolution (no network side-effects beyond DNS)
                     $resolved = @gethostbyname($host);
                     if ($resolved && $resolved !== $host) {
@@ -144,7 +144,7 @@ class EditMailSettings extends Page implements HasForms
             } elseif ($transport === 'log') {
                 // show log channel if configured
                 $channel = $mailer['channel'] ?? config('logging.channels.mail') ?? config('logging.default');
-                $connection = 'log' . ($channel ? " (channel: {$channel})" : '');
+                $connection = 'log'.($channel ? " (channel: {$channel})" : '');
                 $note = __('filament-mailbox::filament-mailbox.hints.using_log_transport');
             } else {
                 // generic fallback: display mailer config summary
@@ -152,7 +152,7 @@ class EditMailSettings extends Page implements HasForms
                     $connectionParts = [];
                     foreach (['host', 'port', 'username', 'channel'] as $k) {
                         if (isset($mailer[$k])) {
-                            $connectionParts[] = "{$k}=" . $mailer[$k];
+                            $connectionParts[] = "{$k}=".$mailer[$k];
                         }
                     }
                     $connection = $connectionParts ? implode(', ', $connectionParts) : null;

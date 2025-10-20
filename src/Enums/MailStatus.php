@@ -1,4 +1,5 @@
 <?php
+
 namespace Bauerdot\FilamentMailBox\Enums;
 
 use Filament\Support\Contracts\HasColor;

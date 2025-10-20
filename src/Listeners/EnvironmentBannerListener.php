@@ -4,7 +4,6 @@ namespace Bauerdot\FilamentMailBox\Listeners;
 
 use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 use Illuminate\Mail\Events\MessageSending;
-use Illuminate\Support\Str;
 
 class EnvironmentBannerListener
 {
@@ -66,7 +65,7 @@ class EnvironmentBannerListener
                 .htmlspecialchars(sprintf('%s environment - %s', $appName, $environment))
                 .'</div>';
         }
-        
+
         $body = method_exists($message, 'getHtmlBody') ? $message->getHtmlBody() : null;
 
         if ($body) {

@@ -2,14 +2,14 @@
 
 namespace Bauerdot\FilamentMailBox\Resources\MailLogResource\Pages;
 
-use Filament\Resources\Pages\ListRecords;
-use Filament\Schemas\Components\Tabs\Tab;
-use Illuminate\Database\Eloquent\Builder;
-use Bauerdot\FilamentMailBox\Models\MailLog;
 use Bauerdot\FilamentMailBox\Enums\MailStatus;
+use Bauerdot\FilamentMailBox\Models\MailLog;
 use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 use Bauerdot\FilamentMailBox\Resources\MailLogResource;
 use Bauerdot\FilamentMailBox\Resources\MailLogResource\Widgets\MailStatsWidget;
+use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListMailLogs extends ListRecords
 {
@@ -18,7 +18,7 @@ class ListMailLogs extends ListRecords
     private $statusesWithoutStats = [
         MailStatus::SENT,
         MailStatus::UNSENT,
-        MailStatus::OPENED
+        MailStatus::OPENED,
     ];
 
     protected function getHeaderWidgets(): array
@@ -31,7 +31,7 @@ class ListMailLogs extends ListRecords
     public function getTabs(): array
     {
         $model = MailLog::class;
-        
+
         $settings = MailSettingsDto::fromConfigAndModel();
 
         $all = Tab::make('all')
@@ -44,8 +44,8 @@ class ListMailLogs extends ListRecords
         foreach (MailStatus::cases() as $enum) {
             $statusValue = $enum->value; // e.g. 'delivered'
 
-            //in case support stats = false show only statuses without stats, others are skipped
-            if (!$settings->supports_stats && !in_array($statusValue, array_map(fn($s) => $s->value, $this->statusesWithoutStats), true)) {
+            // in case support stats = false show only statuses without stats, others are skipped
+            if (! $settings->supports_stats && ! in_array($statusValue, array_map(fn ($s) => $s->value, $this->statusesWithoutStats), true)) {
                 continue; // no need to add additional statuses
             }
 

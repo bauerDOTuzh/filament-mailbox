@@ -4,17 +4,17 @@ use Bauerdot\FilamentMailBox\Enums\MailStatus;
 use Bauerdot\FilamentMailBox\Events\MailLogEventHandler;
 use Bauerdot\FilamentMailBox\Models\MailLog;
 use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Symfony\Component\Mime\Email as SymfonyEmail;
-use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
     // Run the mail_logs migration (the package provides a stub)
-    $migration = include __DIR__ . '/../../database/migrations/create_mail_log_table.php.stub';
+    $migration = include __DIR__.'/../../database/migrations/create_mail_log_table.php.stub';
     $migration->up();
 
     // Also ensure mail_settings table exists for MailSettingsDto to read
-    $migration2 = include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
+    $migration2 = include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
     $migration2->up();
 });
 
@@ -24,14 +24,14 @@ it('saves an emitted email to the database', function () {
         throw new \RuntimeException('mail_logs table does not exist after migration');
     }
     // Build a simple Symfony Email
-    $email = new SymfonyEmail();
+    $email = new SymfonyEmail;
     $email->subject('Feature test email');
     $email->text('Hello test');
     $email->from('sender@example.com');
     $email->to('recipient@example.com');
 
     // Use the event handler to simulate the package handling
-    $handler = new MailLogEventHandler();
+    $handler = new MailLogEventHandler;
     $handler->handleMessageSending(new MessageSending($email));
 
     // Assert a MailLog exists with our subject created by the listener

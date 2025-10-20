@@ -5,13 +5,12 @@ use Bauerdot\FilamentMailBox\Listeners\EnvironmentBannerListener;
 use Bauerdot\FilamentMailBox\Models\MailLog;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Mime\Email as SymfonyEmail;
 
 beforeEach(function () {
-    $migration = include __DIR__ . '/../../database/migrations/create_mail_log_table.php.stub';
+    $migration = include __DIR__.'/../../database/migrations/create_mail_log_table.php.stub';
     $migration->up();
-    $migration2 = include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
+    $migration2 = include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
     $migration2->up();
 });
 
@@ -33,13 +32,13 @@ it('does not allow mass-assigning status via create', function () {
 });
 
 it('adds unique-id header to message when logging', function () {
-    $email = new SymfonyEmail();
+    $email = new SymfonyEmail;
     $email->subject('header test');
     $email->text('hi');
     $email->from('x@x.com');
     $email->to('y@y.com');
 
-    $handler = new MailLogEventHandler();
+    $handler = new MailLogEventHandler;
     $handler->handleMessageSending(new MessageSending($email));
 
     // header should be present on the message
@@ -51,7 +50,7 @@ it('adds unique-id header to message when logging', function () {
 });
 
 it('injects environment banner into html body when enabled', function () {
-    $email = new SymfonyEmail();
+    $email = new SymfonyEmail;
     $email->text('plain text body');
     $email->from('env@local');
     $email->to('me@local');
@@ -68,7 +67,7 @@ it('injects environment banner into html body when enabled', function () {
     }
 
     // The EnvironmentBannerListener will add an HTML banner when enabled
-    $listener = new EnvironmentBannerListener();
+    $listener = new EnvironmentBannerListener;
     $listener->handle(new MessageSending($email));
 
     $html = $email->getHtmlBody();

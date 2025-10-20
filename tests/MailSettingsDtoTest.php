@@ -4,7 +4,7 @@ use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 
 it('reads settings from config and provides defaults', function () {
     // Ensure mail_settings table exists for MailSettingsDto to query
-    $migration = include __DIR__ . '/../database/migrations/create_mail_setting_table.php.stub';
+    $migration = include __DIR__.'/../database/migrations/create_mail_setting_table.php.stub';
     $migration->up();
 
     config()->set('filament-mailbox', [

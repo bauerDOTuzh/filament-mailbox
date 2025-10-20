@@ -2,12 +2,11 @@
 
 namespace Bauerdot\FilamentMailBox\Http\Controllers;
 
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use Bauerdot\FilamentMailBox\Models\MailLog;
 use Bauerdot\FilamentMailBox\Models\MailOpenEvent;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class PixelController
 {
@@ -30,10 +29,10 @@ class PixelController
             // Ensure the message exists; update opened_at on the main log (first-open semantics)
             $mailLog = MailLog::where('message_id', $id)->firstOrFail();
             $mailLog->markOpened();
-            
 
-            if ($level === 'clicks' ) {
+            if ($level === 'clicks') {
                 $mailLog->increment('opens_count');
+
                 return $this->pixelResponse();
             }
 
@@ -77,7 +76,7 @@ class PixelController
                     return $this->pixelResponse();
                 }
             }
-            
+
         } catch (\Throwable $e) {
             Log::debug($e);
         }
@@ -90,12 +89,12 @@ class PixelController
         $png = base64_decode(self::PNG);
 
         return response($png, 200, [
-            'Content-Type'   => 'image/png',
+            'Content-Type' => 'image/png',
             'Content-Length' => (string) strlen($png),
             // Ask clients/proxies not to cache (proxies may still prefetch)
-            'Cache-Control'  => 'no-store, no-cache, must-revalidate, max-age=0',
-            'Pragma'         => 'no-cache',
-            'Expires'        => '0',
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
         ]);
     }
 }

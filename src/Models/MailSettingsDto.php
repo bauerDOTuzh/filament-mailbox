@@ -19,11 +19,11 @@ final class MailSettingsDto
     public array $bcc_address;
 
     public array $allowed_emails;
+
     /**
      * Whether the current mailer supports delivery statistics (open/click/etc).
      */
     public bool $supports_stats = true;
-
 
     public function __construct(array $data)
     {
@@ -102,8 +102,7 @@ final class MailSettingsDto
         // For certain drivers (e.g. smtp or log) we do not have meaningful delivery stats
         if (in_array($driver, ['smtp', 'log'], true)) {
             $dto->supports_stats = false;
-        }
-        else {
+        } else {
             $dto->supports_stats = true;
         }
 

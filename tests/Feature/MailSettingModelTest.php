@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Cache;
 
 beforeEach(function () {
     // Ensure mail_settings table exists
-    $m = include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
+    $m = include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
     $m->up();
     Cache::flush();
 });

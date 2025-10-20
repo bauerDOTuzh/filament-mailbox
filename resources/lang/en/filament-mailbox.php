@@ -66,7 +66,7 @@ return [
     'status.sent' => 'Sent',
     'status.unsent' => 'Unsent',
 
-// Banner / preview
+    // Banner / preview
     'banner.test_email' => '⚠️ TEST EMAIL: :appName - :environment ⚠️',
     'banner.environment' => 'Environment:',
     'banner.server' => 'Server:',
@@ -97,9 +97,9 @@ return [
     'stats.opened_at' => 'Opened',
     'stats.clicked_at' => 'Clicked',
     'stats.bounced_at' => 'Bounced',
-    'stats.sent_at' => "Sent",
+    'stats.sent_at' => 'Sent',
     'stats.of' => 'of',
     'stats.emails' => 'emails',
 
-    'tabs.all' => 'All'
+    'tabs.all' => 'All',
 ];

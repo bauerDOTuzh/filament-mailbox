@@ -2,10 +2,10 @@
 
 namespace Bauerdot\FilamentMailBox\Models;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Model;
 use Bauerdot\FilamentMailBox\Enums\MailStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @property array $data
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class MailLog extends Model
 {
     use HasFactory;
-    
+
     // Allow mass assignment for common mail log fields. Using fillable is
     // safer than unguarded when publishing a package.
     protected $fillable = [
@@ -28,7 +28,7 @@ class MailLog extends Model
         'attachments',
         'message_id',
         // 'status' autoupdated on proper timestamps updates. Prefer using the accessor
-        //'status',
+        // 'status',
         'data',
         // timestamp fields for events
         'sent_at',
@@ -57,7 +57,6 @@ class MailLog extends Model
         return json_encode($this->data, JSON_PRETTY_PRINT);
     }
 
-
     /**
      * Mark the mail as sent (sets sent_at). Saves the model.
      */
@@ -66,6 +65,7 @@ class MailLog extends Model
         $this->sent_at = $when ?? now();
         $this->setStatusIfHigherPriority(MailStatus::SENT);
         $this->save();
+
         return $this;
     }
 
@@ -77,6 +77,7 @@ class MailLog extends Model
         $this->delivered_at = $when ?? now();
         $this->setStatusIfHigherPriority(MailStatus::DELIVERED);
         $this->save();
+
         return $this;
     }
 
@@ -88,6 +89,7 @@ class MailLog extends Model
         $this->opened_at = $when ?? now();
         $this->setStatusIfHigherPriority(MailStatus::OPENED);
         $this->save();
+
         return $this;
     }
 
@@ -99,6 +101,7 @@ class MailLog extends Model
         $this->bounced_at = $when ?? now();
         $this->setStatusIfHigherPriority(MailStatus::BOUNCED);
         $this->save();
+
         return $this;
     }
 
@@ -110,6 +113,7 @@ class MailLog extends Model
         $this->complained_at = $when ?? now();
         $this->setStatusIfHigherPriority(MailStatus::COMPLAINED);
         $this->save();
+
         return $this;
     }
 
@@ -139,5 +143,4 @@ class MailLog extends Model
             $this->status = $status;
         }
     }
-
 }

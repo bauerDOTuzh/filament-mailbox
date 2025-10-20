@@ -6,7 +6,6 @@ use Bauerdot\FilamentMailBox\Enums\MailStatus;
 use Bauerdot\FilamentMailBox\Models\MailLog;
 use Bauerdot\FilamentMailBox\Models\MailSettingsDto;
 use Illuminate\Mail\Events\MessageSending;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\Mime\Email;
@@ -45,7 +44,6 @@ class MailLoggingListener
             // Ensure initial status is set to UNSENT without allowing mass-assignment
             $mailLog->status = MailStatus::UNSENT;
             $mailLog->save();
-
 
             if (config('filament-mailbox.amazon-ses.configuration-set') !== null) {
                 $event->message->getHeaders()->addTextHeader('X-SES-CONFIGURATION-SET', config('filament-mailbox.amazon-ses.configuration-set'));
@@ -149,6 +147,7 @@ class MailLoggingListener
     protected function getAddressesValue(array $address): ?string
     {
         $addresses = collect($address)->map(fn ($address) => $address->toString());
+
         return $addresses->count() > 0 ? $addresses->implode(', ') : null;
 
     }
@@ -167,7 +166,7 @@ class MailLoggingListener
     /**
      * Determine if the current mail transport/mailer should be auto-marked as delivered.
      *
-     * @param array $allowedTransports
+     * @param  array  $allowedTransports
      * @return bool
      */
     // autodeliver handling removed — capability is no longer tracked here

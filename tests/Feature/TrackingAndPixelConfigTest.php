@@ -1,21 +1,21 @@
 <?php
 
-use Bauerdot\FilamentMailBox\Listeners\TrackingPixelListener;
 use Bauerdot\FilamentMailBox\Http\Controllers\PixelController;
-use Illuminate\Mail\Events\MessageSending;
-use Symfony\Component\Mime\Email as SymfonyEmail;
+use Bauerdot\FilamentMailBox\Listeners\TrackingPixelListener;
 use Bauerdot\FilamentMailBox\Models\MailLog;
 use Bauerdot\FilamentMailBox\Models\MailOpenEvent;
+use Illuminate\Mail\Events\MessageSending;
+use Symfony\Component\Mime\Email as SymfonyEmail;
 
 beforeEach(function () {
-    include __DIR__ . '/../../database/migrations/create_mail_log_table.php.stub';
-    include __DIR__ . '/../../database/migrations/create_mail_open_events_table.php.stub';
-    include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
-    $m = include __DIR__ . '/../../database/migrations/create_mail_log_table.php.stub';
+    include __DIR__.'/../../database/migrations/create_mail_log_table.php.stub';
+    include __DIR__.'/../../database/migrations/create_mail_open_events_table.php.stub';
+    include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
+    $m = include __DIR__.'/../../database/migrations/create_mail_log_table.php.stub';
     $m->up();
-    $m2 = include __DIR__ . '/../../database/migrations/create_mail_open_events_table.php.stub';
+    $m2 = include __DIR__.'/../../database/migrations/create_mail_open_events_table.php.stub';
     $m2->up();
-    $m3 = include __DIR__ . '/../../database/migrations/create_mail_setting_table.php.stub';
+    $m3 = include __DIR__.'/../../database/migrations/create_mail_setting_table.php.stub';
     $m3->up();
 
     // Define the pixel route used by the TrackingPixelListener
@@ -27,12 +27,12 @@ beforeEach(function () {
 it('inserts tracking pixel into html messages when enabled', function () {
     config()->set('filament-mailbox.tracking.turn_on', true);
 
-    $email = new SymfonyEmail();
+    $email = new SymfonyEmail;
     $email->from('from@example.com');
     $email->to('to@example.com');
     $email->html('<html><body>Hello</body></html>');
 
-    $listener = new TrackingPixelListener();
+    $listener = new TrackingPixelListener;
     $listener->handle(new MessageSending($email));
 
     $html = $email->getHtmlBody();
@@ -60,7 +60,7 @@ it('pixel controller creates MailOpenEvent when tracking logs enabled', function
     $request = Illuminate\Http\Request::create('/filament-mailbox/pixel/test-msg-id', 'GET', [], [], [], ['REMOTE_ADDR' => '1.2.3.4']);
     $request->headers->set('User-Agent', 'PHPUnit');
 
-    $controller = new PixelController();
+    $controller = new PixelController;
 
     $response = $controller->show($request, 'test-msg-id');
 
