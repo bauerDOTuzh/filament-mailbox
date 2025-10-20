@@ -4,7 +4,6 @@ namespace Bauerdot\FilamentMailBox\Models;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use Bauerdot\FilamentMailBox\Models\MailSetting;
 
 /**
  * Simple DTO for typed mail settings access.

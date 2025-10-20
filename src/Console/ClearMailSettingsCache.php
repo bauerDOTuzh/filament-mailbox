@@ -2,8 +2,8 @@
 
 namespace Bauerdot\FilamentMailBox\Console;
 
-use Illuminate\Console\Command;
 use Bauerdot\FilamentMailBox\Models\MailSetting;
+use Illuminate\Console\Command;
 
 class ClearMailSettingsCache extends Command
 {

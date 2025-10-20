@@ -77,8 +77,6 @@ class EditMailSettings extends Page implements HasForms
                     ->state(MailSettingsDto::fromConfigAndModel()->tracking_on ? __('Yes') : __('No'))
                     ->hint(MailSettingsDto::fromConfigAndModel()->tracking_level),
 
-
-
                 Components\Toggle::make('show_environment_banner')
                     ->label(__('filament-mailbox::filament-mailbox.navigation.settings.show_environment_banner'))
                     ->disabled($lockedShowEnvironmentBanner)
