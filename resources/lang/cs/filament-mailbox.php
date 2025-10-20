@@ -106,7 +106,7 @@ return [
     'stats.clicked_at' => 'Kliknuto',
     'stats.bounced_at' => 'Odmítnuto',
     'stats.sent_at' => 'Odesláno',
-        'tabs.all' => 'Vše',
+    'tabs.all' => 'Vše',
     'stats.of' => 'z',
     'stats.emails' => 'e-mailů',
 ];

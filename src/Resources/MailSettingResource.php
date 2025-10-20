@@ -49,7 +49,6 @@ class MailSettingResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'mail-setting';
 
-
     // The resource uses a custom Edit page which provides the form
     public static function getPages(): array
     {
