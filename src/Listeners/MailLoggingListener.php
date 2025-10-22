@@ -154,15 +154,57 @@ class MailLoggingListener
 
     }
 
-    protected function saveAttachments(Email $message): ?string
+    protected function saveAttachments(Email $message): ?array
     {
-        if (empty($message->getAttachments())) {
+        // Respect configuration to optionally skip storing attachments
+        if (! config('filament-mailbox.store_attachments', true)) {
             return null;
         }
 
-        return collect($message->getAttachments())
-            ->map(fn (DataPart $part) => $part->toString())
-            ->implode("\n\n");
+        $attachments = $message->getAttachments() ?? [];
+
+        if (empty($attachments)) {
+            return null;
+        }
+
+        // Represent attachments as an array of data about each part. We keep it
+        // simple and store the filename (if present), media type and the
+        // base64-encoded body so it can be inspected or restored if needed.
+        return collect($attachments)->map(function (DataPart $part) {
+            $headers = $part->getPreparedHeaders();
+
+            $filename = $part->getFilename();
+            $mediaType = method_exists($part, 'getMediaType') ? $part->getMediaType() : null;
+
+            // Attempt to get body content safely. DataPart may expose body as
+            // getBody? Use toString fallback which includes headers; base64
+            // encode the body to keep JSON-safe and compact-ish.
+            try {
+                $body = $part->getBody();
+                if (is_object($body) && method_exists($body, 'toString')) {
+                    $raw = $body->toString();
+                } elseif (is_string($body)) {
+                    $raw = $body;
+                } else {
+                    $raw = $part->toString();
+                }
+            } catch (\Throwable $e) {
+                $raw = $part->toString();
+            }
+
+            // Remove headers from raw if it's the full part; try to isolate body
+            // by splitting at the first blank line.
+            $bodyOnly = preg_split('/\r?\n\r?\n/', $raw, 2)[1] ?? $raw;
+
+            return [
+                'filename' => $filename,
+                'media_type' => $mediaType,
+                // store as base64 to ensure binary-safety inside JSON
+                'body_base64' => base64_encode($bodyOnly),
+                'size' => strlen($bodyOnly),
+                'headers' => $headers ? $headers->toString() : null,
+            ];
+        })->all();
     }
 
     /**

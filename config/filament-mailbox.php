@@ -28,6 +28,10 @@ return [
         'direction' => 'desc',
     ],
 
+    // Whether to store attachments on the MailLog model (as JSON array).
+    // Set to false to avoid storing attachments (saves space / privacy).
+    'store_attachments' => env('MAILBOX_STORE_ATTACHMENTS', false),
+
     // Default mail settings and lock behaviour
     'mail_settings' => [
         // Default values for settings when not present in DB
