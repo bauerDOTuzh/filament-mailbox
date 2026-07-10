@@ -8,6 +8,8 @@
 
 This plugin adds, based on managable config in Filament admin panel, a banner to all outgoing emails. Additionally, this package includes small preview of all outgoing emails in Filament admin panel, this past is inspured by TappNetwork package.
 
+This branch targets Filament 5.x.
+
 ## Installation
 
 You can install the package via composer:
@@ -16,6 +18,8 @@ You can install the package via composer:
 ```bash
 composer require bauerdot/filament-mailbox
 ```
+
+If you are installing into a Filament 5 project, use the `0.0.5XX` release line.
 
 You can publish and run the migrations with:
 
